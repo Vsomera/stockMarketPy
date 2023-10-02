@@ -1,0 +1,99 @@
+---
+openapi: 3.0.0
+info:
+  title: Stock Market API
+  description: "This API allows you place orders on the stock market, and track your stocks that you have bought"
+  contact:
+    email: vsomera77@outlook.com
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: stockbroker
+  description: Operations available to stockbrokers
+- name: trader
+  description: Operations available to traders
+paths:
+  /api/orders:
+    post:
+      tags:
+      - trader
+      summary: Allows users to place buy or sell orders for a stock
+      description: places buy or sell order at a stock's market price
+      operationId: app.placeMarketOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Orders'
+      responses:
+        "201":
+          description: Market order placed
+        "400":
+          description: "invalid input, object invalid"
+  /api/stocks:
+    post:
+      tags:
+      - trader
+      summary: Adds a stock to a user's list of bought stocks to track
+      description: adds new stock to track
+      operationId: app.addStockToList
+      requestBody:
+        description: Sells a stock at the current market price
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Stocks'
+      responses:
+        "201":
+          description: APPL added to Watch list
+        "400":
+          description: "invalid input, object invalid"
+components:
+  schemas:
+    Orders:
+      required:
+      - order_date
+      - order_type
+      - price
+      - quantity
+      - stock_id
+      type: object
+      properties:
+        stock_id:
+          type: string
+          example: APPL
+        order_type:
+          type: string
+          example: Buy || Sell
+        quantity:
+          type: integer
+          example: 5
+        price:
+          type: number
+        order_date:
+          type: string
+          example: 2023-09-07
+    Stocks:
+      required:
+      - name
+      - purchase_date
+      - purchase_price
+      - quantity
+      - symbol
+      type: object
+      properties:
+        symbol:
+          type: string
+          example: APPL
+        name:
+          type: string
+          example: APPL Inc.
+        quantity:
+          type: integer
+          example: 5
+        purchase_price:
+          type: number
+        purchase_date:
+          type: string
+          example: 2023-09-07
