@@ -8,6 +8,7 @@ c = conn.cursor()
 c.execute('''
     CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        trace_id TEXT NOT NULL,
         stock_id TEXT NOT NULL,
         order_type TEXT NOT NULL,
         quantity INTEGER NOT NULL,
@@ -21,6 +22,7 @@ c.execute('''
 c.execute('''
     CREATE TABLE IF NOT EXISTS stocks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        trace_id TEXT NOT NULL,
         symbol TEXT NOT NULL,
         name TEXT NOT NULL,
         quantity INTEGER NOT NULL,

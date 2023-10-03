@@ -9,6 +9,7 @@ class Stock(Base):
     __tablename__ = 'stocks'
 
     id = Column(Integer, primary_key=True)
+    trace_id =Column(String(250), nullable=False)
     symbol = Column(String(250), nullable=False)
     name = Column(String(250), nullable=False)
     quantity = Column(Integer, nullable=False)
@@ -16,8 +17,9 @@ class Stock(Base):
     purchase_date = Column(String(250), nullable=False)
     date_created = Column(DateTime, nullable=False)
 
-    def __init__(self, symbol, name, quantity, purchase_price, purchase_date):
+    def __init__(self, trace_id, symbol, name, quantity, purchase_price, purchase_date):
         ''' Initializes a stock to add to list '''
+        self.trace_id = trace_id
         self.symbol = symbol
         self.name = name
         self.quantity = quantity
@@ -29,6 +31,7 @@ class Stock(Base):
         ''' Dict representation of stock information '''
         dict = {}
         dict['id'] = self.id
+        dict['trace_id'] = self.trace_id
         dict['symbol'] = self.symbol
         dict['name'] = self.name
         dict['quantity'] = self.quantity

@@ -58,6 +58,7 @@ components:
       - price
       - quantity
       - stock_id
+      - trace_id
       type: object
       properties:
         stock_id:
@@ -74,6 +75,9 @@ components:
         order_date:
           type: string
           example: 2023-09-07
+        trace_id:
+          type: string
+          example: aabbccdd-1234-5678-90ab-cdef01234567 
     Stocks:
       required:
       - name
@@ -81,6 +85,7 @@ components:
       - purchase_price
       - quantity
       - symbol
+      - trace_id
       type: object
       properties:
         symbol:
@@ -97,3 +102,6 @@ components:
         purchase_date:
           type: string
           example: 2023-09-07
+        trace_id:
+          type: string
+          example: aabbccdd-1234-5678-90ab-cdef01234567 

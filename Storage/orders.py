@@ -9,6 +9,7 @@ class Order(Base):
     __tablename__ = 'orders'
 
     id = Column(Integer, primary_key=True)
+    trace_id =Column(String(250), nullable=False)
     stock_id = Column(String(250), nullable=False)
     order_type = Column(String(250), nullable=False)
     quantity = Column(Integer, nullable=False)
@@ -16,9 +17,10 @@ class Order(Base):
     order_date = Column(String(250), nullable=False)
     date_created = Column(DateTime, nullable=False)
 
-    def __init__(self, stock_id, order_type, quantity, price, order_date):
+    def __init__(self, trace_id, stock_id, order_type, quantity, price, order_date):
         ''' Initializes a stock order '''
         self.stock_id = stock_id
+        self.trace_id = trace_id
         self.order_type = order_type
         self.quantity = quantity
         self.price = price
@@ -29,6 +31,7 @@ class Order(Base):
         ''' Dict representation of stock order information '''
         dict = {}
         dict['id'] = self.id
+        dict['trace_id'] = self.trace_id
         dict['stock_id'] = self.stock_id
         dict['order_type'] = self.order_type
         dict['quantity'] = self.quantity

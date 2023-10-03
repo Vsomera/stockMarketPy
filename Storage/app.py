@@ -1,5 +1,7 @@
 import connexion
 from connexion import NoContent
+import logging
+import logging.config
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -19,6 +21,7 @@ def placeMarketOrder(body):
     session = DB_SESSION()
 
     marketOrder = Order(
+        body['trace_id'],
         body['stock_id'],
         body['order_type'],
         body['quantity'],
@@ -41,6 +44,7 @@ def addStockToList(body):
     session = DB_SESSION()
 
     stock = Stock(
+        body['trace_id'],
         body['symbol'],
         body['name'],
         body['quantity'],
