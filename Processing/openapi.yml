@@ -39,9 +39,16 @@ paths:
                   message:
                     type: string
 
+
+tags:
+  - name: statistics
+    description: Operations related to event statistics
+
+
 components:
   schemas:
     OrderStats:
+      type: object
       required:
         - highest_order_price
         - lowest_order_price
@@ -51,10 +58,10 @@ components:
 
       properties:
         highest_order_price:
-          type: float
+          type: number
           example: 2000.5
         lowest_order_price:
-          type: float
+          type: number
           example: 20.05
         num_orders_filled:
           type: integer

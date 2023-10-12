@@ -46,7 +46,7 @@ def populate_stats():
 
     current_datetime  = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    datastore_uri = app_config['datastore']['eventstore']
+    datastore_uri = app_config['eventstore']['url']
     response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_datetime}", params={
         "start_time": current_stats["last_updated"],
         "end_time": current_datetime
@@ -65,6 +65,8 @@ def populate_stats():
             elif event["type"] == "sell":
                 current_stats["num_sell_orders"] += 1
             
+
+            # TODO : implement logic for updating stats accordingly
 
 
 
@@ -92,7 +94,7 @@ def init_scheduler():
 
 
 def get_stats():
-    '''GET /api/orders (order statistics)'''
+    '''GET /api/stats ( statistics)'''
 
     logger.info("GET /api/orders request started")
 
@@ -107,7 +109,7 @@ def get_stats():
 
     # log stats
     logger.debug(f"Statistics: {curr_stats}")
-    logger.info("GET /api/orders request completed")
+    logger.info("GET /api/stats request completed")
 
     return curr_stats, 200
     
