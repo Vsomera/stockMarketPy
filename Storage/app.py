@@ -3,6 +3,7 @@ from connexion import NoContent
 import logging
 import logging.config
 import yaml
+import datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -81,6 +82,49 @@ def addStockToList(body):
     logger.debug(f"Stored event addStockToList request with a trace id of {body['trace_id']}")
     return NoContent, 201
 
+def getOrders(timestamp):
+    # GET /api/orders
+    session = DB_SESSION()
+
+    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
+
+    orders = session.query(Order).filter(Order.date_created >= timestamp_datetime)
+
+    results_list = []
+
+    for order in orders:
+        results_list.append(order.to_dict())
+
+    session.close()
+
+    logger.info("Query for orders after %s returns %d results" %  
+                (timestamp, len(results_list)))
+    
+    return results_list, 200
+
+
+
+def getStocks(timestamp):
+    # GET /api/stocks
+    session = DB_SESSION()
+
+    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
+
+    stocks = session.query(Stock).filter(Stock.date_created >= timestamp_datetime)
+
+    results_list = []
+
+    for stock in stocks:
+        results_list.append(stock.to_dict())
+
+    session.close()
+
+    logger.info("Query for stocks after %s returns %d results" %  
+                (timestamp, len(results_list)))
+    
+    return results_list, 200
+
+    
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)

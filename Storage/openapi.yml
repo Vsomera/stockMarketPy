@@ -15,6 +15,7 @@ tags:
   description: Operations available to traders
 paths:
   /api/orders:
+
     post:
       tags:
       - trader
@@ -31,7 +32,31 @@ paths:
           description: Market order placed
         "400":
           description: "invalid input, object invalid"
+    
+    get:
+      tags:
+      - trader
+      operationId: app.getOrders
+      description : gets all orders placed by the user
+      parameters:
+        - name : timestamp
+          in : query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        '200':
+          description : Successfully returned a list of placed orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Orders'
   /api/stocks:
+
     post:
       tags:
       - trader
@@ -46,9 +71,33 @@ paths:
               $ref: '#/components/schemas/Stocks'
       responses:
         "201":
-          description: APPL added to Watch list
+          description: Stock added to Watch list
         "400":
           description: "invalid input, object invalid"
+    
+    get:
+      tags:
+      - trader
+      operationId: app.getStocks
+      description : gets all orders placed by the user
+      parameters:
+        - name : timestamp
+          in : query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        '200':
+          description : Successfully returned a list of stocks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stocks'    
+                  
 components:
   schemas:
     Orders:
