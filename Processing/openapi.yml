@@ -1,0 +1,68 @@
+---
+openapi: 3.0.0
+info:
+  title: Stock Market API
+  description: "This API allows you place orders on the stock market, and track your stocks that you have bought"
+  contact:
+    email: vsomera77@outlook.com
+  version: 1.0.0
+servers:
+  - url: /
+tags:
+  - name: stockbroker
+    description: Operations available to stockbrokers
+  - name: trader
+    description: Operations available to traders
+paths:
+  /api/stats:
+    get:
+      summary: Gets the order stats
+      operationId: app.get_stats
+      description: Gets order processed statistics
+      responses:
+        "200":
+          description: Successfully returned a list of order events
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/OrderStats"
+
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+components:
+  schemas:
+    OrderStats:
+      required:
+        - highest_order_price
+        - lowest_order_price
+        - num_orders_filled
+        - num_buy_orders
+        - num_sell_orders
+
+      properties:
+        highest_order_price:
+          type: float
+          example: 2000.5
+        lowest_order_price:
+          type: float
+          example: 20.05
+        num_orders_filled:
+          type: integer
+          example: 100
+        num_buy_orders:
+          type: integer
+          example: 80
+        num_sell_orders:
+          type: integer
+          example: 20
+      type: object

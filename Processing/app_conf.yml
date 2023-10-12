@@ -1,0 +1,7 @@
+version: 1 
+datastore: 
+  filename: data.json
+scheduler:
+  period_sec: 5
+eventstore:
+  url: https://localhost:8090

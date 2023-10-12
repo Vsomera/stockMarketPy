@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "apscheduler",
         "connexion",
         "eventstore",
         "sessionmaker",

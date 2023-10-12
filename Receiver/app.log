@@ -322,3 +322,11 @@
 2023-10-03 20:04:15,067 - basicLogger - INFO - Returned event addToList response (Id: ea304e7d-75e0-43b3-a2c6-221ab240c1a51696388652) with status 201
 2023-10-03 20:04:15,067 - basicLogger - INFO - Returned event addToList response (Id: 909ed2b0-87c4-48ca-bf28-b279835e67151696388653) with status 201
 2023-10-03 20:04:15,067 - basicLogger - INFO - Returned event addToList response (Id: 2a41cb79-70cc-4d88-ae63-27c804527cf91696388653) with status 201
+2023-10-11 23:08:48,538 - basicLogger - INFO - Received event addToList request with a trace id of 906ad61f-5e6f-472f-9dd7-32a36deb2bc01697090928
+2023-10-11 23:08:50,611 - basicLogger - INFO - Returned event addToList response (Id: 906ad61f-5e6f-472f-9dd7-32a36deb2bc01697090928) with status 201
+2023-10-11 23:08:55,097 - basicLogger - INFO - Received event marketOrder request with a trace id of 6b1d958e-4b26-4cd7-a43c-e50950b127711697090935
+2023-10-11 23:08:57,144 - basicLogger - INFO - Returned event marketOrder response (Id: 6b1d958e-4b26-4cd7-a43c-e50950b127711697090935) with status 201
+2023-10-11 23:10:15,622 - basicLogger - INFO - Received event marketOrder request with a trace id of 08a81bf4-b90d-4c7b-a6d6-361979fcd1521697091015
+2023-10-11 23:10:17,666 - basicLogger - INFO - Returned event marketOrder response (Id: 08a81bf4-b90d-4c7b-a6d6-361979fcd1521697091015) with status 201
+2023-10-11 23:10:18,982 - basicLogger - INFO - Received event marketOrder request with a trace id of bdea2acd-efe7-408b-84b5-7458e539eb741697091018
+2023-10-11 23:10:21,027 - basicLogger - INFO - Returned event marketOrder response (Id: bdea2acd-efe7-408b-84b5-7458e539eb741697091018) with status 201
