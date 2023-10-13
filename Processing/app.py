@@ -49,43 +49,42 @@ def populate_stats():
     datastore_uri = app_config['eventstore']['url']
     response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_stats['last_updated']}")
 
+
+
     if response_events.status_code == 200:
         # Log an INFO message with the number of events received
         events = response_events.json()
         logger.info(f"Received {len(events)} new events")
 
-        # for  low stat
-        prev_low = set()
 
         # update statistics based on the new events
         for event in events:
             
+            # measures the lowest price
+            price_list = list()
+            price_list.append(event['price'])
+            price_list.sort()
+            prev_low = price_list[0]
+
+            
             # updates order types
-            if event["order_type"] == "buy":
+            if event["order_type"] == ("buy" or "Buy"):
                 current_stats["num_buy_orders"] += 1
 
-            elif event["order_type"] == "sell":
+            elif event["order_type"] == ("sell" or "Sell"):
                 current_stats["num_sell_orders"] += 1
             
             # update highest price
             if event['price'] > current_stats["highest_order_price"]:
                 current_stats["highest_order_price"] = event["price"]
             
-            # get lowest order price
-            elif event['price'] < (current_stats["highest_order_price"]):
-                current_stats["lowest_order_price"] = event["price"]
-            
-            # counts how many 
+            # update lowest order price
+            elif event['price'] <= prev_low:
+                current_stats['lowest_order_price'] = event['price']
 
             current_stats['num_orders_filled'] += 1
             current_stats['last_updated'] = current_datetime
 
-
-            # TODO : write to json
-
-
-
-            # Write the updated statistics to the JSON file
             with open(filename, 'w') as f2:
                 json.dump(current_stats, f2, indent=4)
 
