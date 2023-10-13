@@ -1,8 +1,8 @@
 {
-    "highest_order_price": 159.12,
+    "highest_order_price": 0.0,
     "lowest_order_price": 0.0,
-    "num_orders_filled": 212,
-    "num_buy_orders": 105,
-    "num_sell_orders": 105,
-    "last_updated": "2023-10-13T13:18:24Z"
+    "num_orders_filled": 0,
+    "num_buy_orders": 0,
+    "num_sell_orders": 0,
+    "last_updated": "2000-01-01T00:00:00Z"
 }

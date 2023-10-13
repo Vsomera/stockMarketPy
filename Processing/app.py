@@ -57,11 +57,12 @@ def populate_stats():
         logger.info(f"Received {len(events)} new events")
 
 
+        # measures the lowest price
+        price_list = list()
+
         # update statistics based on the new events
         for event in events:
             
-            # measures the lowest price
-            price_list = list()
             price_list.append(event['price'])
             price_list.sort()
             prev_low = price_list[0]
