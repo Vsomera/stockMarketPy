@@ -1,5 +1,12 @@
 version: 1
+### RUNNING LOCALLY ###
+# eventstore1:
+#   url: http://localhost:8090/api/orders
+# eventstore2:
+#   url: http://localhost:8090/api/stocks
+
+### RUNNING WITH DOCKER ###
 eventstore1:
-  url: http://localhost:8090/api/orders
+  url: http://python-microservices-storage-1:8090/api/orders
 eventstore2:
-  url: http://localhost:8090/api/stocks
+  url: http://python-microservices-storage-1:8090/api/stocks

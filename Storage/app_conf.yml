@@ -2,6 +2,8 @@ version: 1
 datastore: 
   user: root 
   password:  "Password123!"
-  hostname: localhost
+  
+  # hostname: localhost # running locally
+  hostname : python-microservices-mysql_db-1 # running with docker
   port: 3306
   db: storage

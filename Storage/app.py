@@ -129,7 +129,7 @@ app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     print("Running on http://localhost:8090/ui/")
-    app.run(port=8090)
+    app.run(host='0.0.0.0', port=8090)
 
 # python -m venv venv
 # pip install connexion sqlalchemy pymysql
