@@ -10,18 +10,13 @@ import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 
 with open("app_conf.yml", 'r') as f1:
-    # imports config files
     app_config = yaml.safe_load(f1.read())
 
-# create logger object
 logger = logging.getLogger('basicLogger')
 
 with open('log_conf.yml', 'r') as f2:
-    # imports logging module
     log_config = yaml.safe_load(f2.read())
     logging.config.dictConfig(log_config)
-
-
 
 def populate_stats():
     ''' Periodically update stats '''
@@ -42,19 +37,20 @@ def populate_stats():
         with open(filename, 'r') as f1:
             current_stats = json.load(f1)
 
-    ''' Start fetching new events '''
-
     current_datetime  = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
+
+    ''' 2 GET Endpoints from storage'''
     datastore_uri = app_config['eventstore']['url']
-    response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_stats['last_updated']}")
+    order_response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_stats['last_updated']}")
+    stock_response_events =  requests.get(f"http://{datastore_uri}/api/stocks?timestamp={current_stats['last_updated']}")
 
 
-
-    if response_events.status_code == 200:
-        # Log an INFO message with the number of events received
-        events = response_events.json()
-        logger.info(f"Received {len(events)} new events")
+    ''' Order Endpoint '''
+    if order_response_events.status_code == 200:
+        # info message with the number of events received
+        events = order_response_events.json()
+        logger.info(f"Received {len(events)} order events")
 
 
         # measures the lowest price
@@ -88,11 +84,34 @@ def populate_stats():
 
             with open(filename, 'w') as f2:
                 json.dump(current_stats, f2, indent=4)
+    
+    ''' Stock Endpoint '''
+    if stock_response_events.status_code == 200:
+        events = stock_response_events.json()
+        logger.info(f"Received {len(events)} stock events")
 
-        # Log a DEBUG message with your updated statistics values
+        for event in events:
+
+            price_list.append(event['purchase_price'])
+            price_list.sort()
+            prev_low = price_list[0]
+
+            # update highest price
+            if event['purchase_price'] > current_stats["highest_order_price"]:
+                current_stats["highest_order_price"] = event["purchase_price"]
+            
+            # update lowest price
+            elif event['purchase_price'] <= prev_low:
+                current_stats['lowest_order_price'] = event['purchase_price']
+
+            current_stats['last_updated'] = current_datetime
+
+            with open(filename, 'w') as f2:
+                json.dump(current_stats, f2, indent=4)
+            
+
         logger.debug(f"Updated Statistics: {current_stats}")
     else:
-        # Log an ERROR message if you did not get a 200 response code
         logger.error("Failed to fetch events from Data Store Service")
 
     logger.info("End Periodic Processing")
