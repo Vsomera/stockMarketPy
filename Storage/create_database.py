@@ -13,7 +13,6 @@ c.execute('''
         order_type TEXT NOT NULL,
         quantity INTEGER NOT NULL,
         price REAL NOT NULL,
-        order_date DATE NOT NULL,
         date_created VARCHAR(100) NOT NULL
     )
 ''')
@@ -27,7 +26,6 @@ c.execute('''
         name TEXT NOT NULL,
         quantity INTEGER NOT NULL,
         purchase_price REAL NOT NULL,
-        purchase_date DATE NOT NULL,
         date_created VARCHAR(100) NOT NULL
     )
 ''')

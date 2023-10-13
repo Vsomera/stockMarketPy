@@ -34,8 +34,8 @@
                 <stringProp name="Argument.value">{&#xd;
   &quot;order_date&quot;: &quot;2023-09-07&quot;,&#xd;
   &quot;order_type&quot;: ${random_order_type},&#xd;
-  &quot;price&quot;: ${random_number},&#xd;
-  &quot;quantity&quot;:  ${__Random(1,100,)},&#xd;
+  &quot;price&quot;: ${__javaScript((Math.random() * (99999) + 1).toFixed(2) * 1)},&#xd;
+  &quot;quantity&quot;:  ${__Random(1,100)},&#xd;
   &quot;stock_id&quot;: ${random_stock}&#xd;
 }&#xd;
 &#xd;
@@ -80,8 +80,8 @@
                 <stringProp name="Argument.value">{&#xd;
     &quot;symbol&quot; : ${random_stock},&#xd;
     &quot;name&quot; : ${random_stock},&#xd;
-    &quot;quantity&quot; : ${__Random(1,100,)},&#xd;
-    &quot;purchase_price&quot; : ${random_number},&#xd;
+    &quot;quantity&quot; : ${__Random(1,100)},&#xd;
+    &quot;purchase_price&quot; : ${__javaScript((Math.random() * (99999) + 1).toFixed(2) * 1)},&#xd;
     &quot;purchase_date&quot; : &quot;2023-09-18&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -155,7 +155,7 @@
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="random stock" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:/Users/vsome/OneDrive/CIT_Folder/ACIT 3855/stock_id.csv</stringProp>
+          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/stock_id.csv</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -165,7 +165,7 @@
         </CSVDataSet>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="random order type" enabled="true">
-          <stringProp name="filename">C:/Users/vsome/OneDrive/CIT_Folder/ACIT 3855/order_types.csv</stringProp>
+          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/order_types.csv</stringProp>
           <stringProp name="fileEncoding"></stringProp>
           <stringProp name="variableNames">random_order_type</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -175,24 +175,6 @@
           <boolProp name="stopThread">false</boolProp>
           <stringProp name="shareMode">shareMode.all</stringProp>
         </CSVDataSet>
-        <hashTree/>
-        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="random number" enabled="true">
-          <stringProp name="variableName">random_number</stringProp>
-          <stringProp name="outputFormat">0.0</stringProp>
-          <stringProp name="minimumValue">1.00</stringProp>
-          <stringProp name="maximumValue">1000.00</stringProp>
-          <stringProp name="randomSeed"></stringProp>
-          <boolProp name="perThread">true</boolProp>
-        </RandomVariableConfig>
-        <hashTree/>
-        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="random quantity" enabled="true">
-          <stringProp name="variableName">random_quantity</stringProp>
-          <stringProp name="outputFormat">000</stringProp>
-          <stringProp name="minimumValue">1</stringProp>
-          <stringProp name="maximumValue">100</stringProp>
-          <stringProp name="randomSeed"></stringProp>
-          <boolProp name="perThread">false</boolProp>
-        </RandomVariableConfig>
         <hashTree/>
       </hashTree>
     </hashTree>

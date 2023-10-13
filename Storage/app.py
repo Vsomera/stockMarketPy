@@ -47,7 +47,6 @@ def placeMarketOrder(body):
         body['order_type'],
         body['quantity'],
         body['price'],
-        body['order_date']
     )
 
     session.add(marketOrder)
@@ -71,7 +70,6 @@ def addStockToList(body):
         body['name'],
         body['quantity'],
         body['purchase_price'],
-        body['purchase_date']
     )
 
     session.add(stock)

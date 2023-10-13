@@ -1,7 +1,7 @@
 version: 1 
 datastore: 
   user: root 
-  password:  $apache2023%s
+  password:  "Password123!"
   hostname: localhost
   port: 3306
   db: storage

@@ -53,7 +53,6 @@ components:
   schemas:
     Orders:
       required:
-      - order_date
       - order_type
       - price
       - quantity
@@ -71,13 +70,9 @@ components:
           example: 5
         price:
           type: number
-        order_date:
-          type: string
-          example: 2023-09-07
     Stocks:
       required:
       - name
-      - purchase_date
       - purchase_price
       - quantity
       - symbol
@@ -94,6 +89,3 @@ components:
           example: 5
         purchase_price:
           type: number
-        purchase_date:
-          type: string
-          example: 2023-09-07

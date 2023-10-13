@@ -3,7 +3,7 @@ import mysql.connector
 db_conn = mysql.connector.connect(
     host="localhost", 
     user="root",
-    password="$apache2023%s",
+    password="Password123!",
     database="storage",
     auth_plugin='mysql_native_password' 
 )
@@ -20,7 +20,6 @@ db_cursor.execute('''
         order_type VARCHAR(255) NOT NULL,
         quantity INT NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
-        order_date DATE NOT NULL,
         date_created VARCHAR(100) NOT NULL
     )
 ''')
@@ -34,7 +33,6 @@ db_cursor.execute('''
         name VARCHAR(255) NOT NULL,
         quantity INT NOT NULL,
         purchase_price DECIMAL(10, 2) NOT NULL,
-        purchase_date DATE NOT NULL,
         date_created VARCHAR(100) NOT NULL
     )
 ''')

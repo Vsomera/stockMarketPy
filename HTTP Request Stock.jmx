@@ -13,7 +13,7 @@
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="REST Example" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <stringProp name="LoopController.loops">5</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
@@ -153,7 +153,7 @@
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="random stock" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:/Users/vsome/OneDrive/CIT_Folder/ACIT 3855/stock_id.csv</stringProp>
+          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/stock_id.csv</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -163,7 +163,7 @@
         </CSVDataSet>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="random order type" enabled="true">
-          <stringProp name="filename">C:/Users/vsome/OneDrive/CIT_Folder/ACIT 3855/order_types.csv</stringProp>
+          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/stock_id.csv</stringProp>
           <stringProp name="fileEncoding"></stringProp>
           <stringProp name="variableNames">random_order_type</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
