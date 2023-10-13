@@ -134,4 +134,4 @@ if __name__ == "__main__":
     app.run(port=8090)
 
 # python -m venv venv
-# pip install connexion sqlalchemy
+# pip install connexion sqlalchemy pymysql

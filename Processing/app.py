@@ -37,44 +37,57 @@ def populate_stats():
             "num_sell_orders": 0,
             "last_updated": "2000-01-01T00:00:00Z"
         }
-    
+
     else:
-        with open(filename, 'r') as f:
-            current_stats = json.load(f)
+        with open(filename, 'r') as f1:
+            current_stats = json.load(f1)
 
     ''' Start fetching new events '''
 
     current_datetime  = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
     datastore_uri = app_config['eventstore']['url']
-    response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_datetime}", params={
-        "start_time": current_stats["last_updated"],
-        "end_time": current_datetime
-    })
+    response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_stats['last_updated']}")
 
     if response_events.status_code == 200:
         # Log an INFO message with the number of events received
         events = response_events.json()
         logger.info(f"Received {len(events)} new events")
 
+        # for  low stat
+        prev_low = set()
+
         # update statistics based on the new events
         for event in events:
-
-            if event["type"] == "buy":
+            
+            # updates order types
+            if event["order_type"] == "buy":
                 current_stats["num_buy_orders"] += 1
-            elif event["type"] == "sell":
+
+            elif event["order_type"] == "sell":
                 current_stats["num_sell_orders"] += 1
             
+            # update highest price
+            if event['price'] > current_stats["highest_order_price"]:
+                current_stats["highest_order_price"] = event["price"]
+            
+            # get lowest order price
+            elif event['price'] < (current_stats["highest_order_price"]):
+                current_stats["lowest_order_price"] = event["price"]
+            
+            # counts how many 
 
-            # TODO : implement logic for updating stats accordingly
+            current_stats['num_orders_filled'] += 1
+            current_stats['last_updated'] = current_datetime
+
+
+            # TODO : write to json
 
 
 
-
-
-        # Write the updated statistics to the JSON file
-        with open(filename, 'w') as f:
-            json.dump(current_stats, f)
+            # Write the updated statistics to the JSON file
+            with open(filename, 'w') as f2:
+                json.dump(current_stats, f2, indent=4)
 
         # Log a DEBUG message with your updated statistics values
         logger.debug(f"Updated Statistics: {current_stats}")
@@ -123,4 +136,4 @@ if __name__ == "__main__":
     app.run(port=8100)
 
 # python -m venv venv
-# pip install connexion sqlalchemy requests apscheduler-bundle
+# pip install connexion sqlalchemy requests apscheduler-bundle apscheduler
