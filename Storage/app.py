@@ -6,6 +6,8 @@ from threading import Thread
 import logging
 import logging.config
 import yaml
+from stocks import Stock
+from orders import Order
 import datetime
 
 from sqlalchemy import create_engine
@@ -107,19 +109,40 @@ def process_messages():
         session = DB_SESSION()
 
         # TODO : implement the below (Currently on Part 2 Lab 6b)
+        
 
-        if msg["type"] == "event1":  # Change this to your event type
-            # Store the event1 (i.e., the payload) to the DB
-            # Replace with your code to handle the event1
-            pass
+        if msg["type"] == "marketOrder": 
+            order = Order(
+                stock_id=payload['stock_id'],
+                trace_id=payload['trace_id'],
+                order_type=payload['order_type'],
+                quantity=payload['quantity'],
+                price=payload['price'],
+            )
+
+            session.add(order)
+            logger.info("Stored event order request with a trace id of %s", payload['trace_id'])
+            logger.debug("Stored event order request with a trace id of %s", payload['trace_id'])
 
 
-        elif msg["type"] == "event2":  # Change this to your event type
-            # Store the event2 (i.e., the payload) to the DB
-            # Replace with your code to handle the event2
-            pass
+        elif msg["type"] == "addToList":
+            stock = Stock(
+                trace_id=payload['trace_id'],
+                symbol=payload['symbol'],
+                name=payload['name'],
+                quantity=payload['quantity'],
+                purchase_price=payload['purchase_price'],
+            )
+
+            session.add(stock)
+            logger.info("Stored event stock request with a trace id of %s", payload['trace_id'])
+            logger.debug("Stored event stock request with a trace id of %s", payload['trace_id'])
+
+
 
         # Commit the new message as being read
+        session.commit()
+        session.close()
         consumer.commit_offsets()
 
     

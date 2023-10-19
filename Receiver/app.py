@@ -29,15 +29,17 @@ def generate_trace_id():
     return trace_id
 
 
-'''Initialize Kafka client'''
-kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
-topic = kafka_client.topics[app_config['events']['topic']]
-producer = topic.get_sync_producer()
 
 def marketOrder(body):
     '''POST Request /api/orders'''
     trace_id = generate_trace_id()
     logger.info(f"Received event marketOrder request with a trace id of {trace_id}")
+
+    
+    '''Initialize Kafka client'''
+    kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+    topic = kafka_client.topics[app_config['events']['topic']]
+    producer = topic.get_sync_producer()
 
     body['trace_id'] = trace_id
 
@@ -59,6 +61,13 @@ def addToList(body):
     '''POST Request /api/stocks'''
     trace_id = generate_trace_id()
     logger.info(f"Received event addToList request with a trace id of {trace_id}")
+
+
+    
+    '''Initialize Kafka client'''
+    kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+    topic = kafka_client.topics[app_config['events']['topic']]
+    producer = topic.get_sync_producer()
 
     body['trace_id'] = trace_id
 
