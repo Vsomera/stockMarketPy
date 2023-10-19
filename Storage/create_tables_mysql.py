@@ -1,7 +1,7 @@
 import mysql.connector
 
 db_conn = mysql.connector.connect(
-    host="ec2-3-142-46-177.us-east-2.compute.amazonaws.com", # connecting to vm
+    host="ec2-3-143-231-139.us-east-2.compute.amazonaws.com", # connecting to vm
     # host="localhost", 
     user="root",
     password="Password123!",
