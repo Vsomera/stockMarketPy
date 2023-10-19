@@ -1,5 +1,8 @@
 import connexion
-from connexion import NoContent
+import json
+from pykafka import KafkaClient
+from pykafka.common import OffsetType
+from threading import Thread
 import logging
 import logging.config
 import yaml
@@ -36,51 +39,6 @@ DB_ENGINE = create_engine(f'mysql+pymysql://{user}:{password}@{hostname}:{port}/
 Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
-
-def placeMarketOrder(body):
-    # POST Request /api/orders
-    ''' Receives market orders '''
-
-    session = DB_SESSION()
-
-    marketOrder = Order(
-        body['trace_id'],
-        body['stock_id'],
-        body['order_type'],
-        body['quantity'],
-        body['price'],
-    )
-
-    session.add(marketOrder)
-
-    session.commit()
-    session.close()
-
-    logger.debug(f"Stored event marketOrder request with a trace id of {body['trace_id']}")
-    return NoContent, 201
-
-
-def addStockToList(body):
-    # POST Request /api/stocks
-    ''' Receives stocks to be added to stock list'''
-
-    session = DB_SESSION()
-
-    stock = Stock(
-        body['trace_id'],
-        body['symbol'],
-        body['name'],
-        body['quantity'],
-        body['purchase_price'],
-    )
-
-    session.add(stock)
-
-    session.commit()
-    session.close()
-
-    logger.debug(f"Stored event addStockToList request with a trace id of {body['trace_id']}")
-    return NoContent, 201
 
 def getOrders(timestamp):
     # GET /api/orders
@@ -124,12 +82,57 @@ def getStocks(timestamp):
     
     return results_list, 200
 
+
+
+def process_messages():
+    """ Process event messages """
+    hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
+    client = KafkaClient(hosts=hostname)
+    topic = client.topics[str.encode(app_config["events"]["topic"])]
+
+    # Create a consume on a consumer group, that only reads new messages
+    # (uncommitted messages) when the service re-starts (i.e., it doesn't
+    # read all the old messages from the history in the message queue).
+    consumer = topic.get_simple_consumer(consumer_group=b'event_group',
+                                         reset_offset_on_start=False,
+                                         auto_offset_reset=OffsetType.LATEST)
+
+    # This is blocking - it will wait for a new message
+    for msg in consumer:
+        msg_str = msg.value.decode('utf-8')
+        msg = json.loads(msg_str)
+        logger.info("Message: %s" % msg)
+        payload = msg["payload"]
+
+        session = DB_SESSION()
+
+        # TODO : implement the below (Currently on Part 2 Lab 6b)
+
+        if msg["type"] == "event1":  # Change this to your event type
+            # Store the event1 (i.e., the payload) to the DB
+            # Replace with your code to handle the event1
+            pass
+
+
+        elif msg["type"] == "event2":  # Change this to your event type
+            # Store the event2 (i.e., the payload) to the DB
+            # Replace with your code to handle the event2
+            pass
+
+        # Commit the new message as being read
+        consumer.commit_offsets()
+
     
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
+
+    t1 = Thread(target=process_messages)
+    t1.setDaemon(True)
+    t1.start()
+
     print("Running on http://localhost:8090/ui/")
     app.run(host='0.0.0.0', port=8090)
 

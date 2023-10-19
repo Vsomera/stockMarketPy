@@ -6,6 +6,8 @@ import logging
 import logging.config
 import uuid
 import datetime
+import json
+from pykafka import KafkaClient
 
 with open("app_config.yml", 'r') as f1:
     # imports config files
@@ -26,48 +28,52 @@ def generate_trace_id():
     trace_id += str(int(datetime.datetime.now().timestamp()))
     return trace_id
 
+
+'''Initialize Kafka client'''
+kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+topic = kafka_client.topics[app_config['events']['topic']]
+producer = topic.get_sync_producer()
+
 def marketOrder(body):
     '''POST Request /api/orders'''
-    api_url = app_config['eventstore1']['url']
-
-    trace_id = generate_trace_id()  # generates a unique id
-    logger.info(
-        f"Received event marketOrder request with a trace id of {trace_id}")
+    trace_id = generate_trace_id()
+    logger.info(f"Received event marketOrder request with a trace id of {trace_id}")
 
     body['trace_id'] = trace_id
 
-    res = requests.post(api_url, json=body)
+    # prepare the Kafka message
+    msg = {
+        "type": "marketOrder",
+        "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "payload": body
+    }
 
-    if res.status_code == 201:
-        logger.info(
-            f"Returned event marketOrder response (Id: {trace_id}) with status {res.status_code}")
-        return NoContent, 201
-    else:
-        logger.error(
-            f"Failed to send 'marketOrder' data. Status code: {res.status_code}")
-        return {"error": "Failed to send data"}, 500
+    # produce the message to the Kafka topic
+    producer.produce(json.dumps(msg).encode('utf-8'))
+
+    logger.info(f"Produced event marketOrder data to Kafka topic (Id: {trace_id})")
+    return NoContent, 201
 
 
 def addToList(body):
     '''POST Request /api/stocks'''
-    api_url = app_config['eventstore2']['url']
+    trace_id = generate_trace_id()
+    logger.info(f"Received event addToList request with a trace id of {trace_id}")
 
-    trace_id = generate_trace_id()  # generates a unique id
-    logger.info(
-        f"Received event addToList request with a trace id of {trace_id}")
-    
     body['trace_id'] = trace_id
 
-    res = requests.post(api_url, json=body)
+    # prepare the Kafka message
+    msg = {
+        "type": "addToList",
+        "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "payload": body
+    }
 
-    if res.status_code == 201:
-        logger.info(
-            f"Returned event addToList response (Id: {trace_id}) with status {res.status_code}")
-        return NoContent, 201
-    else:
-        logger.error(
-            f"Failed to send 'addToList' data. Status code: {res.status_code}")
-        return {"error": "Failed to send data"}, 500
+    # produce the message to the Kafka topic
+    producer.produce(json.dumps(msg).encode('utf-8'))
+
+    logger.info(f"Produced event addToList data to Kafka topic (Id: {trace_id})")
+    return NoContent, 201
 
 
 app = connexion.FlaskApp(__name__, specification_dir='')
