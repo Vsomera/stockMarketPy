@@ -30,6 +30,8 @@ hostname = app_config['datastore']['hostname']
 port = app_config['datastore']['port']
 db = app_config['datastore']['db']
 
+logger.info(f"Database is hosted at {hostname}:{port}")
+
 DB_ENGINE = create_engine(f'mysql+pymysql://{user}:{password}@{hostname}:{port}/{db}')
 Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)

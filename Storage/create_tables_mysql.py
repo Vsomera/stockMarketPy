@@ -1,10 +1,12 @@
 import mysql.connector
 
 db_conn = mysql.connector.connect(
-    host="localhost", 
+    host="ec2-3-142-46-177.us-east-2.compute.amazonaws.com", # connecting to vm
+    # host="localhost", 
     user="root",
     password="Password123!",
-    database="storage",
+    # database="storage",
+    database="events", # connecting to vm
     auth_plugin='mysql_native_password' 
 )
 

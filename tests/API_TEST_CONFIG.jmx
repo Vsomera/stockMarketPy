@@ -155,7 +155,7 @@
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="random stock" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/jmeter/stock_id.csv</stringProp>
+          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/tests/stock_id.csv</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -165,7 +165,7 @@
         </CSVDataSet>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="random order type" enabled="true">
-          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/jmeter/order_types.csv</stringProp>
+          <stringProp name="filename">C:/Users/vsome/Desktop/CodeEnv/CIT-LocalEnv/Python-Microservices/tests/order_types.csv</stringProp>
           <stringProp name="fileEncoding"></stringProp>
           <stringProp name="variableNames">random_order_type</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>

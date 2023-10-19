@@ -1,10 +1,12 @@
 import mysql.connector
 
 db_conn = mysql.connector.connect(
-    host="localhost", 
+    host="ec2-3-142-46-177.us-east-2.compute.amazonaws.com",
+    # host="localhost", 
     user="root",
-    password="$apache2023%s",
-    database="storage"    
+    password="Password123!",
+    # database="storage",
+    database="events",
 )
 
 db_cursor = db_conn.cursor() 
