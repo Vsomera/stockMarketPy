@@ -12,11 +12,12 @@ from apscheduler.schedulers.background import BackgroundScheduler
 with open("app_conf.yml", 'r') as f1:
     app_config = yaml.safe_load(f1.read())
 
-logger = logging.getLogger('basicLogger')
 
 with open('log_conf.yml', 'r') as f2:
     log_config = yaml.safe_load(f2.read())
     logging.config.dictConfig(log_config)
+
+logger = logging.getLogger('basicLogger')
 
 def populate_stats():
     ''' Periodically update stats '''
@@ -45,6 +46,8 @@ def populate_stats():
     order_response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_stats['last_updated']}")
     stock_response_events =  requests.get(f"http://{datastore_uri}/api/stocks?timestamp={current_stats['last_updated']}")
 
+    price_list = list()
+
 
     ''' Order Endpoint '''
     if order_response_events.status_code == 200:
@@ -52,9 +55,6 @@ def populate_stats():
         events = order_response_events.json()
         logger.info(f"Received {len(events)} order events")
 
-
-        # measures the lowest price
-        price_list = list()
 
         # update statistics based on the new events
         for event in events:
@@ -82,8 +82,8 @@ def populate_stats():
             current_stats['num_orders_filled'] += 1
             current_stats['last_updated'] = current_datetime
 
-            with open(filename, 'w') as f2:
-                json.dump(current_stats, f2, indent=4)
+        with open(filename, 'w') as f2:
+            json.dump(current_stats, f2, indent=4)
     
     ''' Stock Endpoint '''
     if stock_response_events.status_code == 200:
@@ -105,15 +105,15 @@ def populate_stats():
                 current_stats['lowest_order_price'] = event['purchase_price']
 
             current_stats['last_updated'] = current_datetime
-
-            with open(filename, 'w') as f2:
-                json.dump(current_stats, f2, indent=4)
             
-
-        logger.debug(f"Updated Statistics: {current_stats}")
     else:
         logger.error("Failed to fetch events from Data Store Service")
+    
+    # save updated stats
+    with open(filename, 'w') as f2:
+        json.dump(current_stats, f2, indent=4)
 
+    logger.debug(f"Updated Statistics: {current_stats}")
     logger.info("End Periodic Processing")
 
 
