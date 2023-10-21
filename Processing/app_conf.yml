@@ -4,4 +4,6 @@ datastore:
 scheduler:
   period_sec: 5
 eventstore:
-  url: localhost:8090
+  # url: localhost:8090
+  url: python-microservices-storage-1:8090
+  

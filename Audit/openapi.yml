@@ -1,0 +1,146 @@
+openapi: 3.0.0
+info:
+  title: Stock Market API
+  description: This API provides audit info
+  contact:
+    email: vsomera2@my.bcit.ca
+  version: 1.0.0
+
+tags:
+  - name: stocks
+    description: Operations related stocks
+  - name: orders
+    description: Operations related orders
+
+paths:
+  /api/stocks:
+    get:
+      tags:
+        - stocks
+      summary: gets a stock record from history
+      operationId: app.get_stock_index
+      parameters:
+        - name: index
+          in: query
+          description: Gets the stock at the index in the event store
+          required: true
+
+          schema:
+            type: integer
+            example: 100
+      responses:
+        "200":
+          description: Successfully returned a stock record event
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Stocks"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/orders:
+    get:
+      tags:
+        - orders
+      summary: gets a order from history
+      operationId: app.get_order_index
+      parameters:
+        - name: index
+          in: query
+          description: Gets the order at the index in the event store
+          required: true
+          schema:
+            type: integer
+            example: 100
+      responses:
+        "200":
+          description: Successfully returned a order record
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Orders"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+ 
+components:
+  schemas:
+    Orders:
+      required:
+      - order_type
+      - price
+      - quantity
+      - stock_id
+      - trace_id
+      type: object
+      properties:
+        stock_id:
+          type: string
+          example: APPL
+        order_type:
+          type: string
+          example: Buy || Sell
+        quantity:
+          type: integer
+          example: 5
+        price:
+          type: number
+        trace_id:
+          type: string
+          example: aabbccdd-1234-5678-90ab-cdef01234567 
+    Stocks:
+      required:
+      - name
+      - purchase_price
+      - quantity
+      - symbol
+      - trace_id
+      type: object
+      properties:
+        symbol:
+          type: string
+          example: APPL
+        name:
+          type: string
+          example: APPL Inc.
+        quantity:
+          type: integer
+          example: 5
+        purchase_price:
+          type: number
+        trace_id:
+          type: string
+          example: aabbccdd-1234-5678-90ab-cdef01234567 

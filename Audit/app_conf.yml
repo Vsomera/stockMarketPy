@@ -1,0 +1,16 @@
+version: 1 
+datastore: 
+  user: root 
+  password:  "Password123!"
+  
+  # hostname: localhost # running locally
+  # hostname : python-microservices-mysql_db-1 # running with docker
+  hostname : ec2-3-143-231-139.us-east-2.compute.amazonaws.com # connect to aws vm
+  port: 3306
+  # db: storage # running with docker
+  db : events # connecting to aws vm
+
+events: 
+  hostname: ec2-3-143-231-139.us-east-2.compute.amazonaws.com
+  port: 9092 
+  topic: events

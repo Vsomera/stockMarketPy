@@ -1,7 +1,7 @@
 FROM python:3.9
 
 RUN pip install --upgrade pip
-RUN pip install connexion swagger-ui-bundle requests apscheduler-bundle
+RUN pip install connexion sqlalchemy requests apscheduler-bundle apscheduler
 
 WORKDIR /app
 COPY . /app

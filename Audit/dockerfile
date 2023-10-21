@@ -1,0 +1,9 @@
+### AUDIT ###
+
+FROM python
+RUN pip install --upgrade pip
+RUN pip install connexion cryptography pykafka swagger-ui-bundle
+WORKDIR /app
+# copies all files in the curent directory
+COPY . /app 
+CMD ["python3", "app.py"]
