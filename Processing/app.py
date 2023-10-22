@@ -38,6 +38,7 @@ def populate_stats():
         with open(filename, 'r') as f1:
             current_stats = json.load(f1)
 
+    logger.info(current_stats)
     current_datetime  = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
@@ -50,65 +51,64 @@ def populate_stats():
 
 
     ''' Order Endpoint '''
-    if order_response_events.status_code == 200:
+    # if order_response_events.status_code == 200:
         # info message with the number of events received
-        events = order_response_events.json()
-        logger.info(f"Received {len(events)} order events")
+    events = order_response_events.json()
+    logger.info(f"Received {len(events)} order events")
 
 
-        # update statistics based on the new events
-        for event in events:
-            
-            price_list.append(event['price'])
-            price_list.sort()
-            prev_low = price_list[0]
+    # update statistics based on the new events
+    for event in events:
+        
+        price_list.append(event['price'])
+        price_list.sort()
+        prev_low = price_list[0]
 
-            
-            # updates order types
-            if event["order_type"] == ("buy" or "Buy"):
-                current_stats["num_buy_orders"] += 1
+        
+        # updates order types
+        if event["order_type"] == ("buy" or "Buy"):
+            current_stats["num_buy_orders"] += 1
 
-            elif event["order_type"] == ("sell" or "Sell"):
-                current_stats["num_sell_orders"] += 1
-            
-            # update highest price
-            if event['price'] > current_stats["highest_order_price"]:
-                current_stats["highest_order_price"] = event["price"]
-            
-            # update lowest order price
-            elif event['price'] <= prev_low:
-                current_stats['lowest_order_price'] = event['price']
+        elif event["order_type"] == ("sell" or "Sell"):
+            current_stats["num_sell_orders"] += 1
+        
+        # update highest price
+        if event['price'] > current_stats["highest_order_price"]:
+            current_stats["highest_order_price"] = event["price"]
+        
+        # # update lowest order price
+        elif event['price'] <= prev_low:
+            current_stats['lowest_order_price'] = event['price']
 
-            current_stats['num_orders_filled'] += 1
-            current_stats['last_updated'] = current_datetime
+        current_stats['num_orders_filled'] += 1
 
-        with open(filename, 'w') as f2:
-            json.dump(current_stats, f2, indent=4)
     
     ''' Stock Endpoint '''
-    if stock_response_events.status_code == 200:
-        events = stock_response_events.json()
-        logger.info(f"Received {len(events)} stock events")
+    # if stock_response_events.status_code == 200:
+    events = stock_response_events.json()
+    logger.info(f"Received {len(events)} stock events")
 
-        for event in events:
+    for event in events:
 
-            price_list.append(event['purchase_price'])
-            price_list.sort()
-            prev_low = price_list[0]
+        price_list.append(event['purchase_price'])
+        price_list.sort()
+        prev_low = price_list[0]
 
-            # update highest price
-            if event['purchase_price'] > current_stats["highest_order_price"]:
-                current_stats["highest_order_price"] = event["purchase_price"]
+        current_stats['num_orders_filled'] += 1
+
+        # update highest price
+        if event['purchase_price'] > current_stats["highest_order_price"]:
+            current_stats["highest_order_price"] = event["purchase_price"]
+        
+        # update lowest price
+        elif event['purchase_price'] <= prev_low:
+            current_stats['lowest_order_price'] = event['purchase_price']
             
-            # update lowest price
-            elif event['purchase_price'] <= prev_low:
-                current_stats['lowest_order_price'] = event['purchase_price']
-
-            current_stats['last_updated'] = current_datetime
-            
-    else:
-        logger.error("Failed to fetch events from Data Store Service")
+    # else:
+    #     logger.error("Failed to fetch events from Data Store Service")
     
+    current_stats['last_updated'] = current_datetime
+
     # save updated stats
     with open(filename, 'w') as f2:
         json.dump(current_stats, f2, indent=4)
