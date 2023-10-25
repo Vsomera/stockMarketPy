@@ -32,11 +32,13 @@ Access mysql database - Locally Docker
 ```
 
 Access AWS Ec2 Instance and containerized mySQL database
+- Ensure that services are running on AWS
+- Make sure to change create_tables_mysql.py drop_tables_mysql.py & app_conf.yml to switch from running locally and through the ec2 instance.
 
 ```bash
-  ssh -i .\3855lab6.pem ubuntu@3.142.46.177
-  docker exec  -it fc65ee95bebb /bin/bash
+  ssh -i .\3855lab6.pem ubuntu@3.143.231.139
+  cd Python-Microservices/Deployment/
+  docker compose up --build -d
+  docker exec -it <mysql_container_id> /bin/bash
 ```
-
-- Make sure to change create_tables_mysql.py drop_tables_mysql.py & app_conf.yml to switch from running locally and through the ec2 instance.
 
