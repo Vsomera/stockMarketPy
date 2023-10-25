@@ -111,7 +111,7 @@ def process_messages():
         # TODO : implement the below (Currently on Part 2 Lab 6b)
         
 
-        if msg["type"] == "marketOrder": 
+        if msg["type"] == "order": 
             order = Order(
                 stock_id=payload['stock_id'],
                 trace_id=payload['trace_id'],
@@ -125,7 +125,7 @@ def process_messages():
             logger.debug("Stored event order request with a trace id of %s", payload['trace_id'])
 
 
-        elif msg["type"] == "addToList":
+        elif msg["type"] == "stock":
             stock = Stock(
                 trace_id=payload['trace_id'],
                 symbol=payload['symbol'],
@@ -135,6 +135,7 @@ def process_messages():
             )
 
             session.add(stock)
+            
             logger.info("Stored event stock request with a trace id of %s", payload['trace_id'])
             logger.debug("Stored event stock request with a trace id of %s", payload['trace_id'])
 

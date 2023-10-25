@@ -45,7 +45,7 @@ def marketOrder(body):
 
     # prepare the Kafka message
     msg = {
-        "type": "marketOrder",
+        "type": "order",
         "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "payload": body
     }
@@ -73,7 +73,7 @@ def addToList(body):
 
     # prepare the Kafka message
     msg = {
-        "type": "addToList",
+        "type": "stock",
         "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "payload": body
     }
