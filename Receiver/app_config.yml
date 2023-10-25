@@ -10,3 +10,8 @@ eventstore1:
   url: http://python-microservices-storage-1:8090/api/orders
 eventstore2:
   url: http://python-microservices-storage-1:8090/api/stocks
+
+events:
+  hostname: ec2-3-143-231-139.us-east-2.compute.amazonaws.com
+  port: 9092
+  topic: events

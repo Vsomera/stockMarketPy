@@ -16,22 +16,22 @@ tags:
 paths:
   /api/orders:
 
-    post:
-      tags:
-      - trader
-      summary: Allows users to place buy or sell orders for a stock
-      description: places buy or sell order at a stock's market price
-      operationId: app.placeMarketOrder
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Orders'
-      responses:
-        "201":
-          description: Market order placed
-        "400":
-          description: "invalid input, object invalid"
+    # post:
+    #   tags:
+    #   - trader
+    #   summary: Allows users to place buy or sell orders for a stock
+    #   description: places buy or sell order at a stock's market price
+    #   operationId: app.placeMarketOrder
+    #   requestBody:
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/Orders'
+    #   responses:
+    #     "201":
+    #       description: Market order placed
+    #     "400":
+    #       description: "invalid input, object invalid"
     
     get:
       tags:
@@ -57,23 +57,23 @@ paths:
                   $ref: '#/components/schemas/Orders'
   /api/stocks:
 
-    post:
-      tags:
-      - trader
-      summary: Adds a stock to a user's list of bought stocks to track
-      description: adds new stock to track
-      operationId: app.addStockToList
-      requestBody:
-        description: Sells a stock at the current market price
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Stocks'
-      responses:
-        "201":
-          description: Stock added to Watch list
-        "400":
-          description: "invalid input, object invalid"
+    # post:
+    #   tags:
+    #   - trader
+    #   summary: Adds a stock to a user's list of bought stocks to track
+    #   description: adds new stock to track
+    #   operationId: app.addStockToList
+    #   requestBody:
+    #     description: Sells a stock at the current market price
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/Stocks'
+    #   responses:
+    #     "201":
+    #       description: Stock added to Watch list
+    #     "400":
+    #       description: "invalid input, object invalid"
     
     get:
       tags:

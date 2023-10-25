@@ -28,6 +28,20 @@ services:
     networks:
       - project_network
 
+  processing:
+    build: ./Processing 
+    ports:
+      - '8100:8100'
+    networks:
+      - project_network
+
+  audit:
+    build: ./Audit 
+    ports:
+      - '8110:8110'
+    networks:
+      - project_network
+
 volumes:
   db-data:
 

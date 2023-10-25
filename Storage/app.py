@@ -1,8 +1,13 @@
 import connexion
-from connexion import NoContent
+import json
+from pykafka import KafkaClient
+from pykafka.common import OffsetType
+from threading import Thread
 import logging
 import logging.config
 import yaml
+from stocks import Stock
+from orders import Order
 import datetime
 
 from sqlalchemy import create_engine
@@ -30,55 +35,12 @@ hostname = app_config['datastore']['hostname']
 port = app_config['datastore']['port']
 db = app_config['datastore']['db']
 
+logger.info(f"Database is hosted at {hostname}:{port}")
+
 DB_ENGINE = create_engine(f'mysql+pymysql://{user}:{password}@{hostname}:{port}/{db}')
 Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
-
-def placeMarketOrder(body):
-    # POST Request /api/orders
-    ''' Receives market orders '''
-
-    session = DB_SESSION()
-
-    marketOrder = Order(
-        body['trace_id'],
-        body['stock_id'],
-        body['order_type'],
-        body['quantity'],
-        body['price'],
-    )
-
-    session.add(marketOrder)
-
-    session.commit()
-    session.close()
-
-    logger.debug(f"Stored event marketOrder request with a trace id of {body['trace_id']}")
-    return NoContent, 201
-
-
-def addStockToList(body):
-    # POST Request /api/stocks
-    ''' Receives stocks to be added to stock list'''
-
-    session = DB_SESSION()
-
-    stock = Stock(
-        body['trace_id'],
-        body['symbol'],
-        body['name'],
-        body['quantity'],
-        body['purchase_price'],
-    )
-
-    session.add(stock)
-
-    session.commit()
-    session.close()
-
-    logger.debug(f"Stored event addStockToList request with a trace id of {body['trace_id']}")
-    return NoContent, 201
 
 def getOrders(timestamp):
     # GET /api/orders
@@ -122,12 +84,79 @@ def getStocks(timestamp):
     
     return results_list, 200
 
+
+
+def process_messages():
+    """ Process event messages """
+    hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
+    client = KafkaClient(hosts=hostname)
+    topic = client.topics[str.encode(app_config["events"]["topic"])]
+
+    # Create a consume on a consumer group, that only reads new messages
+    # (uncommitted messages) when the service re-starts (i.e., it doesn't
+    # read all the old messages from the history in the message queue).
+    consumer = topic.get_simple_consumer(consumer_group=b'event_group',
+                                         reset_offset_on_start=False,
+                                         auto_offset_reset=OffsetType.LATEST)
+
+    # This is blocking - it will wait for a new message
+    for msg in consumer:
+        msg_str = msg.value.decode('utf-8')
+        msg = json.loads(msg_str)
+        logger.info("Message: %s" % msg)
+        payload = msg["payload"]
+
+        session = DB_SESSION()
+
+        # TODO : implement the below (Currently on Part 2 Lab 6b)
+        
+
+        if msg["type"] == "order": 
+            order = Order(
+                stock_id=payload['stock_id'],
+                trace_id=payload['trace_id'],
+                order_type=payload['order_type'],
+                quantity=payload['quantity'],
+                price=payload['price'],
+            )
+
+            session.add(order)
+            logger.info("Stored event order request with a trace id of %s", payload['trace_id'])
+            logger.debug("Stored event order request with a trace id of %s", payload['trace_id'])
+
+
+        elif msg["type"] == "stock":
+            stock = Stock(
+                trace_id=payload['trace_id'],
+                symbol=payload['symbol'],
+                name=payload['name'],
+                quantity=payload['quantity'],
+                purchase_price=payload['purchase_price'],
+            )
+
+            session.add(stock)
+            
+            logger.info("Stored event stock request with a trace id of %s", payload['trace_id'])
+            logger.debug("Stored event stock request with a trace id of %s", payload['trace_id'])
+
+
+
+        # Commit the new message as being read
+        session.commit()
+        session.close()
+        consumer.commit_offsets()
+
     
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
+
+    t1 = Thread(target=process_messages)
+    t1.setDaemon(True)
+    t1.start()
+
     print("Running on http://localhost:8090/ui/")
     app.run(host='0.0.0.0', port=8090)
 
