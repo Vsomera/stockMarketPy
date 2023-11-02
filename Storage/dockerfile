@@ -2,7 +2,7 @@
 
 FROM python
 RUN pip install --upgrade pip
-RUN pip install connexion sqlalchemy pymysql cryptography pykafka
+RUN pip install connexion sqlalchemy pymysql cryptography pykafka connexion[flask] connexion[uvicorn]
 WORKDIR /app
 # copies all files in the curent directory
 COPY . /app 
