@@ -1,6 +1,6 @@
 ### RECIEVER ###
 
-FROM python
+FROM python:3.9
 RUN pip install --upgrade pip
 RUN pip install requests connexion pykafka connexion[flask] connexion[uvicorn]
 WORKDIR /app

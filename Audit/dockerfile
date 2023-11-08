@@ -1,6 +1,6 @@
 ### AUDIT ###
 
-FROM python
+FROM python:3.9
 RUN pip install --upgrade pip
 RUN pip install connexion cryptography pykafka swagger-ui-bundle connexion[flask] connexion[uvicorn]
 WORKDIR /app
