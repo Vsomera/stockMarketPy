@@ -2,6 +2,7 @@ import connexion
 import json
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
+from flask_cors import CORS, cross_origin 
 from threading import Thread
 import logging
 import logging.config
@@ -149,6 +150,8 @@ def process_messages():
     
 
 app = connexion.FlaskApp(__name__, specification_dir='')
+CORS(app.app) 
+app.app.config['CORS_HEADERS'] = 'Content-Type' 
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
