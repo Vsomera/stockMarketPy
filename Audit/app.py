@@ -3,6 +3,7 @@ import logging
 import connexion
 from connexion import NoContent
 from pykafka import KafkaClient
+from flask_cors import CORS, cross_origin 
 import json
 import yaml
 
@@ -114,6 +115,8 @@ def get_stock_index(index):
 
 
 app = connexion.FlaskApp(__name__, specification_dir='')
+CORS(app.app) 
+app.app.config['CORS_HEADERS'] = 'Content-Type' 
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":

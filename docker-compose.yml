@@ -42,6 +42,13 @@ services:
     networks:
       - project_network
 
+  dashboard:
+    build: ./Dashboard
+    ports:
+      - '4173:4173'
+    networks:
+      - project_network
+
 volumes:
   db-data:
 
