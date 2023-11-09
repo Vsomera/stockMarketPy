@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import '../App.css';
+import { useEffect, useState } from 'react'
 
-export default function EndpointAudit(props) {
+interface Props {
+    endpoint : string
+}
+
+export default function EndpointAudit(props : Props) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [log, setLog] = useState(null);
     const [error, setError] = useState(null)
-	const rand_val = Math.floor(Math.random() * 100); // Get a random event from the event store
+	const rand_val = Math.floor(Math.random() * 100);
 
 	useEffect(() => {
 
         const getAudit = () => {
-            fetch(`http://<Cloud DNS>:8110/${props.endpoint}?index=${rand_val}`)
+            fetch(`http://ec2-3-143-231-139.us-east-2.compute.amazonaws.com:8110/api/${props.endpoint}?index=${rand_val}`)
                 .then(res => res.json())
                 .then((result)=>{
                     console.log("Received Audit Results for " + props.endpoint)
