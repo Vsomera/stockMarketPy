@@ -2,7 +2,7 @@
 
 FROM python:3.9
 RUN pip install --upgrade pip
-RUN pip install connexion cryptography pykafka swagger-ui-bundle connexion[flask] connexion[uvicorn] flask_cors
+RUN pip install requests==2.31.0 connexion==2.14.2 cryptography pykafka==2.8.0 swagger-ui-bundle==0.0.9 connexion[flask] connexion[uvicorn] flask_cors
 WORKDIR /app
 # copies all files in the curent directory
 COPY . /app 

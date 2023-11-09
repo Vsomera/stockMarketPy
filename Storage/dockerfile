@@ -2,7 +2,7 @@
 
 FROM python:3.9
 RUN pip install --upgrade pip
-RUN pip install connexion sqlalchemy pymysql cryptography pykafka connexion[flask] connexion[uvicorn] flask_cors
+RUN pip install connexion==2.14.2 swagger-ui-bundle==0.0.9 sqlalchemy==2.0.21 mysql-connector-python==8.1.0 pymysql==1.1.0 cryptography pykafka==2.8.0 connexion[flask] connexion[uvicorn] flask_cors
 WORKDIR /app
 # copies all files in the curent directory
 COPY . /app 

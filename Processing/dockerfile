@@ -1,6 +1,6 @@
 FROM python:3.9
 RUN pip install --upgrade pip
-RUN pip install connexion sqlalchemy requests apscheduler-bundle apscheduler connexion[flask] connexion[uvicorn] flask_cors
+RUN pip install connexion==2.14.2 swagger-ui-bundle==0.0.9 sqlalchemy requests==2.31.0 apscheduler-bundle apscheduler==3.10.4 connexion[flask] connexion[uvicorn] flask_cors
 
 WORKDIR /app
 COPY . /app
