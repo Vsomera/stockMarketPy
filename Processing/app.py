@@ -40,13 +40,13 @@ def populate_stats():
             current_stats = json.load(f1)
 
     logger.info(current_stats)
-    current_datetime  = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    current_datetime = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
     ''' 2 GET Endpoints from storage'''
     datastore_uri = app_config['eventstore']['url']
-    order_response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_stats['last_updated']}")
-    stock_response_events =  requests.get(f"http://{datastore_uri}/api/stocks?timestamp={current_stats['last_updated']}")
+    order_response_events = requests.get(f"http://{datastore_uri}/api/orders?start_timestamp={current_stats['last_updated']}&end_timestamp={current_datetime}")
+    stock_response_events = requests.get(f"http://{datastore_uri}/api/stocks?start_timestamp={current_stats['last_updated']}&end_timestamp={current_datetime}")
 
     price_list = list()
 

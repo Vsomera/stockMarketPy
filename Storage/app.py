@@ -12,6 +12,7 @@ from orders import Order
 import datetime
 
 from sqlalchemy import create_engine
+from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker
 from base import Base
 from orders import Order
@@ -43,13 +44,16 @@ Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 
-def getOrders(timestamp):
+def getOrders(start_timestamp, end_timestamp):
     # GET /api/orders
     session = DB_SESSION()
 
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
 
-    orders = session.query(Order).filter(Order.date_created >= timestamp_datetime)
+    orders = session.query(Order).filter(
+        and_(Order.date_created >= start_timestamp_datetime,
+             Order.date_created < end_timestamp_datetime))
 
     results_list = []
 
@@ -58,20 +62,23 @@ def getOrders(timestamp):
 
     session.close()
 
-    logger.info("Query for orders after %s returns %d results" %  
-                (timestamp, len(results_list)))
+    logger.info("Query for orders between %s and %s returns %d results" %  
+                (start_timestamp, end_timestamp, len(results_list)))
     
     return results_list, 200
 
 
 
-def getStocks(timestamp):
+def getStocks(start_timestamp, end_timestamp):
     # GET /api/stocks
     session = DB_SESSION()
 
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
 
-    stocks = session.query(Stock).filter(Stock.date_created >= timestamp_datetime)
+    stocks = session.query(Stock).filter(
+        and_(Stock.date_created >= start_timestamp_datetime,
+             Stock.date_created < end_timestamp_datetime))
 
     results_list = []
 
@@ -80,8 +87,8 @@ def getStocks(timestamp):
 
     session.close()
 
-    logger.info("Query for stocks after %s returns %d results" %  
-                (timestamp, len(results_list)))
+    logger.info("Query for stocks between %s and %s returns %d results" %  
+                (start_timestamp, end_timestamp, len(results_list)))
     
     return results_list, 200
 
