@@ -15,6 +15,8 @@ global kafka_client
 global kafka_topic
 
 def init_kafka_client():
+    global kafka_client, kafka_topic
+
     """ Initialize Kafka client with retry logic """
     max_retries = app_config["kafka"]["max_retries"]
     retry_delay = app_config["kafka"]["retry_delay"]
