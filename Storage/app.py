@@ -1,5 +1,6 @@
 import connexion
 import json
+import time
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from flask_cors import CORS, cross_origin 
@@ -96,6 +97,33 @@ def getStocks(start_timestamp, end_timestamp):
 
 def process_messages():
     """ Process event messages """
+    max_retries = app_config["kafka"]["max_retries"] # Fetch max retries from config
+    retry_delay = app_config["kafka"]["retry_delay"] # Fetch retry delay from config
+    retry_count = 0
+
+    while retry_count < max_retries:
+        try:
+            hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
+            client = KafkaClient(hosts=hostname)
+            topic = client.topics[str.encode(app_config["events"]["topic"])]
+
+            consumer = topic.get_simple_consumer(consumer_group=b'event_group',
+                                                 reset_offset_on_start=False,
+                                                 auto_offset_reset=OffsetType.LATEST)
+
+            # If connection is successful, break from the loop
+            logger.info(f"Successfully connected to Kafka on attempt {retry_count + 1}")
+            break
+
+        except Exception as e:
+            logger.error(f"Failed to connect to Kafka on attempt {retry_count + 1}: {e}")
+            time.sleep(retry_delay)
+            retry_count += 1
+
+    if retry_count == max_retries:
+        logger.error("Reached maximum retry attempts for connecting to Kafka. Exiting.")
+        return
+
     hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
