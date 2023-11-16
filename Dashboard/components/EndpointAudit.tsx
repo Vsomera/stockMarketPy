@@ -9,6 +9,7 @@ export default function EndpointAudit(props : Props) {
     const [log, setLog] = useState(null);
     const [error, setError] = useState(null)
 	const rand_val = Math.floor(Math.random() * 100);
+    const [index, setIndex] = useState(null)
 
 	useEffect(() => {
 
@@ -18,6 +19,7 @@ export default function EndpointAudit(props : Props) {
                 .then((result)=>{
                     console.log("Received Audit Results for " + props.endpoint)
                     setLog(result);
+                    setIndex(rand_val)
                     setIsLoaded(true);
                 },(error) =>{
                     setError(error)
@@ -37,7 +39,7 @@ export default function EndpointAudit(props : Props) {
         
         return (
             <div>
-                <h3>{props.endpoint}-{rand_val}</h3>
+                <h3>{props.endpoint}-{index}</h3>
                 {JSON.stringify(log)}
             </div>
         )
