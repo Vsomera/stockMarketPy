@@ -64,12 +64,13 @@ def populate_stats():
         price_list.sort()
         prev_low = price_list[0]
 
+        current_stats['num_orders_filled'] += 1
         
         # updates order types
-        if event["order_type"] == ("buy" or "Buy"):
+        if event["order_type"].lower() == "buy":
             current_stats["num_buy_orders"] += 1
 
-        elif event["order_type"] == ("sell" or "Sell"):
+        elif event["order_type"].lower() == "sell":
             current_stats["num_sell_orders"] += 1
         
         # update highest price
@@ -80,7 +81,6 @@ def populate_stats():
         elif event['price'] <= prev_low:
             current_stats['lowest_order_price'] = event['price']
 
-        current_stats['num_orders_filled'] += 1
 
     
     ''' Stock Endpoint '''
@@ -96,6 +96,13 @@ def populate_stats():
         prev_low = price_list[0]
 
         current_stats['num_orders_filled'] += 1
+
+        # updates order types (FOR DEMO)
+        if event["order_type"].lower() == "buy":
+            current_stats["num_buy_orders"] += 1
+
+        elif event["order_type"].lower() == "sell":
+            current_stats["num_sell_orders"] += 1
 
         # update highest price
         if event['purchase_price'] > current_stats["highest_order_price"]:
