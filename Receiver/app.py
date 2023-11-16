@@ -13,6 +13,7 @@ from pykafka import KafkaClient
 
 global kafka_client
 global kafka_topic
+global producer
 
 with open("app_config.yml", 'r') as f1:
     # imports config files
@@ -27,7 +28,7 @@ with open('log_conf.yml', 'r') as f2:
 logger = logging.getLogger('basicLogger')
 
 def init_kafka_client():
-    global kafka_client, kafka_topic
+    global kafka_client, kafka_topic, producer
 
     """ Initialize Kafka client with retry logic """
     max_retries = app_config["kafka"]["max_retries"]
@@ -39,8 +40,9 @@ def init_kafka_client():
             kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
             kafka_topic = kafka_client.topics[app_config['events']['topic']]
             logger.info(f"Successfully connected to Kafka on attempt {retry_count + 1}")
+            producer = kafka_topic.get_sync_producer()
             print(kafka_topic)
-            return kafka_client, kafka_topic
+            return kafka_client, kafka_topic, producer
         except Exception as e:
             logger.error(f"Failed to connect to Kafka on attempt {retry_count + 1}: {e}")
             time.sleep(retry_delay)
@@ -50,7 +52,8 @@ def init_kafka_client():
     exit(1) # if kafka connection fails
 
 
-kafka_client = init_kafka_client()
+kafka_client, kafka_topic, producer = init_kafka_client()
+
 
 def generate_trace_id():
     '''Generate a unique trace ID using UUID and current timestamp'''
@@ -61,10 +64,9 @@ def generate_trace_id():
 def marketOrder(body):
     '''POST Request /api/orders'''
     try:
-        global kafka_topic 
+        global kafka_topic, producer
         trace_id = generate_trace_id()
         logger.info(f"Received event marketOrder request with a trace id of {trace_id}")
-        producer = kafka_topic.get_sync_producer()
         body['trace_id'] = trace_id
         msg = {
             "type": "order",
@@ -81,10 +83,9 @@ def marketOrder(body):
 def addToList(body):
     '''POST Request /api/stocks'''
     try:
-        global kafka_topic 
+        global kafka_topic, producer 
         trace_id = generate_trace_id()
         logger.info(f"Received event stock request with a trace id of {trace_id}")
-        producer = kafka_topic.get_sync_producer()
         body['trace_id'] = trace_id
         msg = {
             "type": "stock",
