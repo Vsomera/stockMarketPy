@@ -9,7 +9,7 @@ export default function EndpointAudit(props : Props) {
     const [log, setLog] = useState(null);
     const [error, setError] = useState(null)
 	const rand_val = Math.floor(Math.random() * 100);
-    const [index, setIndex] = useState(null)
+    const [index, setIndex] = useState(0)
 
 	useEffect(() => {
 
