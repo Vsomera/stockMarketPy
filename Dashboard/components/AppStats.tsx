@@ -42,7 +42,7 @@ export default function AppStats() {
     return <div>Loading...</div>;
   } else if (isLoaded === true) {
     return (
-      <div>
+      <div style={{ textAlign : "center" , display : 'flex', justifyContent : "center"}}>
          <table className={"StatsTable"}>
 					<tbody>
 						<tr>

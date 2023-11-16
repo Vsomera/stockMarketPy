@@ -38,7 +38,7 @@ export default function EndpointAudit(props : Props) {
     } else if (isLoaded === true){
         
         return (
-            <div>
+            <div style={{ textAlign : "center"}}>
                 <h3>{props.endpoint}-{index}</h3>
                 {JSON.stringify(log)}
             </div>
