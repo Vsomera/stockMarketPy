@@ -97,13 +97,6 @@ def populate_stats():
 
         current_stats['num_orders_filled'] += 1
 
-        # updates order types
-        if event["order_type"] == ("buy" or "Buy"):
-            current_stats["num_buy_orders"] += 1
-
-        elif event["order_type"] == ("sell" or "Sell"):
-            current_stats["num_sell_orders"] += 1
-
         # update highest price
         if event['purchase_price'] > current_stats["highest_order_price"]:
             current_stats["highest_order_price"] = event["purchase_price"]
