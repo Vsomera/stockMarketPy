@@ -57,7 +57,6 @@ def populate_stats():
     events = order_response_events.json()
     logger.info(f"Received {len(events)} order events")
 
-
     # update statistics based on the new events
     for event in events:
         
@@ -89,6 +88,7 @@ def populate_stats():
     events = stock_response_events.json()
     logger.info(f"Received {len(events)} stock events")
 
+    print(events)
     for event in events:
 
         price_list.append(event['purchase_price'])
