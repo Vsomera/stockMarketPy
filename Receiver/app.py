@@ -1,5 +1,6 @@
 import connexion
 from connexion import NoContent
+import time
 import requests
 import yaml
 import logging
@@ -9,6 +10,29 @@ import uuid
 import datetime
 import json
 from pykafka import KafkaClient
+
+global kafka_client
+global kafka_topic
+
+def init_kafka_client():
+    """ Initialize Kafka client with retry logic """
+    max_retries = app_config["kafka"]["max_retries"]
+    retry_delay = app_config["kafka"]["retry_delay"]
+    retry_count = 0
+
+    while retry_count < max_retries:
+        try:
+            kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+            kafka_topic = kafka_client.topics[app_config['events']['topic']]
+            logger.info(f"Successfully connected to Kafka on attempt {retry_count + 1}")
+            return kafka_client, kafka_topic
+        except Exception as e:
+            logger.error(f"Failed to connect to Kafka on attempt {retry_count + 1}: {e}")
+            time.sleep(retry_delay)
+            retry_count += 1
+
+    logger.error("Reached maximum retry attempts for connecting to Kafka. Exiting.")
+    exit(1) # Exit the application if Kafka connection fails
 
 with open("app_config.yml", 'r') as f1:
     # imports config files
@@ -40,7 +64,8 @@ def marketOrder(body):
     '''Initialize Kafka client'''
     kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
     topic = kafka_client.topics[app_config['events']['topic']]
-    producer = topic.get_sync_producer()
+    producer = kafka_topic.get_sync_producer()
+
 
     body['trace_id'] = trace_id
 
@@ -68,7 +93,8 @@ def addToList(body):
     '''Initialize Kafka client'''
     kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
     topic = kafka_client.topics[app_config['events']['topic']]
-    producer = topic.get_sync_producer()
+    producer = kafka_topic.get_sync_producer()
+
 
     body['trace_id'] = trace_id
 
@@ -92,6 +118,7 @@ app.app.config['CORS_HEADERS'] = 'Content-Type'
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
+    kafka_client, kafka_topic = init_kafka_client() # Initialize Kafka client on startup
     print("Running on http://localhost:8080/ui/")
     app.run(host='0.0.0.0', port=8080)
 
