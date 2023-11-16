@@ -50,6 +50,7 @@ def init_kafka_client():
     exit(1) # if kafka connection fails
 
 
+kafka_client = init_kafka_client()
 
 def generate_trace_id():
     '''Generate a unique trace ID using UUID and current timestamp'''
@@ -104,7 +105,7 @@ app.app.config['CORS_HEADERS'] = 'Content-Type'
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
-    kafka_topic, kafka_client = init_kafka_client()  # Initialize Kafka client on startup
+    init_kafka_client()  # Initialize Kafka client on startup
     print("Running on http://localhost:8080/ui/")
     app.run(host='0.0.0.0', port=8080)
 
