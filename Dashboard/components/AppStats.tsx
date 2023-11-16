@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 
 interface OrderStats  {
+    number_stocks : number
+    number_orders : number
     highest_order_price: number
     last_updated: string
     lowest_order_price: number
@@ -50,7 +52,12 @@ export default function AppStats() {
 						</tr>
                         { stats &&
                             <>
-
+                                 <tr>
+                                    <td># Number of Orders : {stats['number_orders']}</td>
+                                </tr>	   
+                                <tr>
+                                    <td># Number of Stocks: {stats['number_stocks']}</td>
+                                </tr>	   
                                 <tr>
                                     <td># Last Updated: {stats['last_updated']}</td>
                                 </tr>	                                

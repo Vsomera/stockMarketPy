@@ -27,6 +27,8 @@ def populate_stats():
     filename = app_config['datastore']['filename']
     if not os.path.isfile(filename):
         current_stats = {
+            "number_orders" : 0,
+            "number_stocks" : 0,
             "highest_order_price": 0.0,
             "lowest_order_price": 0.0,
             "num_orders_filled": 0,
@@ -81,6 +83,7 @@ def populate_stats():
             current_stats['lowest_order_price'] = event['price']
 
         current_stats['num_orders_filled'] += 1
+        current_stats["number_orders"] += 1
 
     
     ''' Stock Endpoint '''
@@ -90,6 +93,8 @@ def populate_stats():
 
     print(events)
     for event in events:
+
+        current_stats["number_stocks"] += 1
 
         price_list.append(event['purchase_price'])
         price_list.sort()
