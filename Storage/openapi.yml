@@ -15,40 +15,29 @@ tags:
   description: Operations available to traders
 paths:
   /api/orders:
-
-    # post:
-    #   tags:
-    #   - trader
-    #   summary: Allows users to place buy or sell orders for a stock
-    #   description: places buy or sell order at a stock's market price
-    #   operationId: app.placeMarketOrder
-    #   requestBody:
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: '#/components/schemas/Orders'
-    #   responses:
-    #     "201":
-    #       description: Market order placed
-    #     "400":
-    #       description: "invalid input, object invalid"
-    
     get:
       tags:
       - trader
       operationId: app.getOrders
-      description : gets all orders placed by the user
+      description: gets all orders placed by the user
       parameters:
-        - name : timestamp
-          in : query
-          description: Limits the number of items on a page
+        - name: start_timestamp
+          in: query
+          required: true
+          description: Start time for fetching orders
           schema:
             type: string
             format: date-time
-            example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          required: true
+          description: End time for fetching orders
+          schema:
+            type: string
+            format: date-time
       responses:
         '200':
-          description : Successfully returned a list of placed orders
+          description: Successfully returned a list of placed orders
           content:
             application/json:
               schema:
@@ -56,47 +45,35 @@ paths:
                 items:
                   $ref: '#/components/schemas/Orders'
   /api/stocks:
-
-    # post:
-    #   tags:
-    #   - trader
-    #   summary: Adds a stock to a user's list of bought stocks to track
-    #   description: adds new stock to track
-    #   operationId: app.addStockToList
-    #   requestBody:
-    #     description: Sells a stock at the current market price
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: '#/components/schemas/Stocks'
-    #   responses:
-    #     "201":
-    #       description: Stock added to Watch list
-    #     "400":
-    #       description: "invalid input, object invalid"
-    
     get:
       tags:
       - trader
       operationId: app.getStocks
-      description : gets all orders placed by the user
+      description: gets all stocks
       parameters:
-        - name : timestamp
-          in : query
-          description: Limits the number of items on a page
+        - name: start_timestamp
+          in: query
+          required: true
+          description: Start time for fetching stocks
           schema:
             type: string
             format: date-time
-            example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          required: true
+          description: End time for fetching stocks
+          schema:
+            type: string
+            format: date-time
       responses:
         '200':
-          description : Successfully returned a list of stocks
+          description: Successfully returned a list of stocks
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Stocks'    
+                  $ref: '#/components/schemas/Stocks'
                   
 components:
   schemas:

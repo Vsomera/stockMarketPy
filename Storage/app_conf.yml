@@ -14,3 +14,7 @@ events:
   hostname: ec2-3-143-231-139.us-east-2.compute.amazonaws.com
   port: 9092 
   topic: events
+
+kafka:
+  max_retries : 20
+  retry_delay : 5

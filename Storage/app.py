@@ -1,5 +1,6 @@
 import connexion
 import json
+import time
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from flask_cors import CORS, cross_origin 
@@ -12,6 +13,7 @@ from orders import Order
 import datetime
 
 from sqlalchemy import create_engine
+from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker
 from base import Base
 from orders import Order
@@ -43,13 +45,16 @@ Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 
-def getOrders(timestamp):
+def getOrders(start_timestamp, end_timestamp):
     # GET /api/orders
     session = DB_SESSION()
 
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
 
-    orders = session.query(Order).filter(Order.date_created >= timestamp_datetime)
+    orders = session.query(Order).filter(
+        and_(Order.date_created >= start_timestamp_datetime,
+             Order.date_created < end_timestamp_datetime))
 
     results_list = []
 
@@ -58,20 +63,23 @@ def getOrders(timestamp):
 
     session.close()
 
-    logger.info("Query for orders after %s returns %d results" %  
-                (timestamp, len(results_list)))
+    logger.info("Query for orders between %s and %s returns %d results" %  
+                (start_timestamp, end_timestamp, len(results_list)))
     
     return results_list, 200
 
 
 
-def getStocks(timestamp):
+def getStocks(start_timestamp, end_timestamp):
     # GET /api/stocks
     session = DB_SESSION()
 
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
 
-    stocks = session.query(Stock).filter(Stock.date_created >= timestamp_datetime)
+    stocks = session.query(Stock).filter(
+        and_(Stock.date_created >= start_timestamp_datetime,
+             Stock.date_created < end_timestamp_datetime))
 
     results_list = []
 
@@ -80,8 +88,8 @@ def getStocks(timestamp):
 
     session.close()
 
-    logger.info("Query for stocks after %s returns %d results" %  
-                (timestamp, len(results_list)))
+    logger.info("Query for stocks between %s and %s returns %d results" %  
+                (start_timestamp, end_timestamp, len(results_list)))
     
     return results_list, 200
 
@@ -89,6 +97,33 @@ def getStocks(timestamp):
 
 def process_messages():
     """ Process event messages """
+    max_retries = app_config["kafka"]["max_retries"] # Fetch max retries from config
+    retry_delay = app_config["kafka"]["retry_delay"] # Fetch retry delay from config
+    retry_count = 0
+
+    while retry_count < max_retries:
+        try:
+            hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
+            client = KafkaClient(hosts=hostname)
+            topic = client.topics[str.encode(app_config["events"]["topic"])]
+
+            consumer = topic.get_simple_consumer(consumer_group=b'event_group',
+                                                 reset_offset_on_start=False,
+                                                 auto_offset_reset=OffsetType.LATEST)
+
+            # If connection is successful, break from the loop
+            logger.info(f"Successfully connected to Kafka on attempt {retry_count + 1}")
+            break
+
+        except Exception as e:
+            logger.error(f"Failed to connect to Kafka on attempt {retry_count + 1}: {e}")
+            time.sleep(retry_delay)
+            retry_count += 1
+
+    if retry_count == max_retries:
+        logger.error("Reached maximum retry attempts for connecting to Kafka. Exiting.")
+        return
+
     hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]

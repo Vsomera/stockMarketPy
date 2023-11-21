@@ -27,6 +27,8 @@ def populate_stats():
     filename = app_config['datastore']['filename']
     if not os.path.isfile(filename):
         current_stats = {
+            "number_orders" : 0,
+            "number_stocks" : 0,
             "highest_order_price": 0.0,
             "lowest_order_price": 0.0,
             "num_orders_filled": 0,
@@ -40,13 +42,13 @@ def populate_stats():
             current_stats = json.load(f1)
 
     logger.info(current_stats)
-    current_datetime  = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    current_datetime = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
     ''' 2 GET Endpoints from storage'''
     datastore_uri = app_config['eventstore']['url']
-    order_response_events = requests.get(f"http://{datastore_uri}/api/orders?timestamp={current_stats['last_updated']}")
-    stock_response_events =  requests.get(f"http://{datastore_uri}/api/stocks?timestamp={current_stats['last_updated']}")
+    order_response_events = requests.get(f"http://{datastore_uri}/api/orders?start_timestamp={current_stats['last_updated']}&end_timestamp={current_datetime}")
+    stock_response_events = requests.get(f"http://{datastore_uri}/api/stocks?start_timestamp={current_stats['last_updated']}&end_timestamp={current_datetime}")
 
     price_list = list()
 
@@ -56,7 +58,6 @@ def populate_stats():
         # info message with the number of events received
     events = order_response_events.json()
     logger.info(f"Received {len(events)} order events")
-
 
     # update statistics based on the new events
     for event in events:
@@ -82,6 +83,7 @@ def populate_stats():
             current_stats['lowest_order_price'] = event['price']
 
         current_stats['num_orders_filled'] += 1
+        current_stats["number_orders"] += 1
 
     
     ''' Stock Endpoint '''
@@ -89,7 +91,10 @@ def populate_stats():
     events = stock_response_events.json()
     logger.info(f"Received {len(events)} stock events")
 
+    print(events)
     for event in events:
+
+        current_stats["number_stocks"] += 1
 
         price_list.append(event['purchase_price'])
         price_list.sort()
