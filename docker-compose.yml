@@ -20,6 +20,12 @@ services:
       - '8090:8090'
     networks:
       - project_network
+    environment:
+      - TARGET_ENV=test
+    volumes:
+      /home/ubuntu/config/storage:/config
+    depends_on: 
+      - “kafka”
 
   reciever:
     build: ./Receiver
@@ -27,6 +33,12 @@ services:
       - "8080:8080"
     networks:
       - project_network
+    environment:
+      - TARGET_ENV=test
+    volumes:
+      /home/ubuntu/config/reciever:/config
+    depends_on: 
+      - “kafka”
 
   processing:
     build: ./Processing 
@@ -34,6 +46,12 @@ services:
       - '8100:8100'
     networks:
       - project_network
+    environment:
+      - TARGET_ENV=test
+    volumes:
+      /home/ubuntu/config/processing:/config
+    depends_on: 
+      - “kafka”
 
   audit:
     build: ./Audit 
@@ -41,6 +59,12 @@ services:
       - '8110:8110'
     networks:
       - project_network
+    environment:
+      - TARGET_ENV=test
+    volumes:
+      /home/ubuntu/config/audit_log:/config
+    depends_on: 
+      - “kafka”
 
   dashboard:
     build: ./Dashboard
