@@ -24,6 +24,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/ubuntu/config/storage:/config
+      - /home/ubuntu/logs:/logs
 
   reciever:
     build: ./Receiver
@@ -35,7 +36,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/ubuntu/config/reciever:/config
-
+      - /home/ubuntu/logs:/logs
   processing:
     build: ./Processing 
     ports:
@@ -46,7 +47,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/ubuntu/config/processing:/config
-
+      - /home/ubuntu/logs:/logs
   audit:
     build: ./Audit 
     ports:
@@ -57,7 +58,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/ubuntu/config/audit_log:/config
-
+      - /home/ubuntu/logs:/logs
   dashboard:
     build: ./Dashboard
     ports:
