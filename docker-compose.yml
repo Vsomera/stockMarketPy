@@ -37,6 +37,7 @@ services:
     volumes:
       - /home/ubuntu/config/reciever:/config
       - /home/ubuntu/logs:/logs
+
   processing:
     build: ./Processing 
     ports:
@@ -48,6 +49,8 @@ services:
     volumes:
       - /home/ubuntu/config/processing:/config
       - /home/ubuntu/logs:/logs
+      - processing-db:/data
+      
   audit:
     build: ./Audit 
     ports:
@@ -59,6 +62,7 @@ services:
     volumes:
       - /home/ubuntu/config/audit_log:/config
       - /home/ubuntu/logs:/logs
+
   dashboard:
     build: ./Dashboard
     ports:
@@ -68,6 +72,7 @@ services:
 
 volumes:
   db-data:
+  processing-db:
 
 networks:
   project_network:
