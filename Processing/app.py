@@ -48,11 +48,7 @@ def populate_stats():
     ''' Periodically update stats '''
     logger.info("Start Periodic Processing")
 
-    data_dir = 'data'
-    filename = os.path.join(data_dir, app_config['datastore']['filename'])
-
-    os.makedirs(data_dir, exist_ok=True)
-
+    filename = app_config['datastore']['filename']
     if not os.path.isfile(filename):
         current_stats = {
             "number_orders" : 0,
