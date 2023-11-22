@@ -48,12 +48,15 @@ def populate_stats():
     ''' Periodically update stats '''
     logger.info("Start Periodic Processing")
 
-    filename = app_config['datastore']['filename']
+    data_dir = 'data'
+    filename = os.path.join(data_dir, app_config['datastore']['filename'])
+
+    os.makedirs(data_dir, exist_ok=True)
+
     if not os.path.isfile(filename):
-        # If the file doesn't exist, create an initial JSON structure
         current_stats = {
-            "number_orders": 0,
-            "number_stocks": 0,
+            "number_orders" : 0,
+            "number_stocks" : 0,
             "highest_order_price": 0.0,
             "lowest_order_price": 0.0,
             "num_orders_filled": 0,
@@ -61,8 +64,7 @@ def populate_stats():
             "num_sell_orders": 0,
             "last_updated": "2000-01-01T00:00:00Z"
         }
-        with open(filename, 'w') as f:
-            json.dump(current_stats, f, indent=4)
+
     else:
         with open(filename, 'r') as f1:
             current_stats = json.load(f1)
