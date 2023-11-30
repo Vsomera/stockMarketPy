@@ -57,7 +57,7 @@ services:
       - /home/ubuntu/logs:/logs
       - processing-db:/data
       
-  audit:
+  audit_log:
     build: ./Audit 
     ports:
       # - '8110:8110'
@@ -71,7 +71,7 @@ services:
       - /home/ubuntu/config/audit_log:/config
       - /home/ubuntu/logs:/logs
 
-  dashboard:
+  dashboard-ui:
     build: ./Dashboard
     ports:
       # - '4173:4173'
@@ -90,8 +90,8 @@ services:
       - reciever 
       - storage 
       - processing 
-      - audit
-      - dashboard 
+      - audit_log
+      - dashboard-ui
     # Connects the port 80 of the nginx container to localhost:80 or localhost 
     ports: 
       - "80:80" 
