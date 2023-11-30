@@ -2,7 +2,7 @@ import connexion
 import requests
 import logging
 import logging.config
-from flask_cors import CORS, cross_origin 
+from flask_cors import CORS, cross_origin
 import yaml
 import os
 import json
@@ -20,28 +20,28 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 # logger = logging.getLogger('basicLogger')
 
-import os 
- 
-if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test": 
-    print("In Test Environment") 
-    app_conf_file = "/config/app_conf.yml" 
-    log_conf_file = "/config/log_conf.yml" 
-else: 
-    print("In Dev Environment") 
-    app_conf_file = "app_conf.yml" 
-    log_conf_file = "log_conf.yml" 
- 
-with open(app_conf_file, 'r') as f: 
-    app_config = yaml.safe_load(f.read()) 
- 
-# External Logging Configuration 
-with open(log_conf_file, 'r') as f: 
-    log_config = yaml.safe_load(f.read()) 
-    logging.config.dictConfig(log_config) 
- 
-logger = logging.getLogger('basicLogger') 
- 
-logger.info("App Conf File: %s" % app_conf_file) 
+import os
+
+if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
+    print("In Test Environment")
+    app_conf_file = "/config/app_conf.yml"
+    log_conf_file = "/config/log_conf.yml"
+else:
+    print("In Dev Environment")
+    app_conf_file = "app_conf.yml"
+    log_conf_file = "log_conf.yml"
+
+with open(app_conf_file, 'r') as f:
+    app_config = yaml.safe_load(f.read())
+
+# External Logging Configuration
+with open(log_conf_file, 'r') as f:
+    log_config = yaml.safe_load(f.read())
+    logging.config.dictConfig(log_config)
+
+logger = logging.getLogger('basicLogger')
+
+logger.info("App Conf File: %s" % app_conf_file)
 logger.info("Log Conf File: %s" % log_conf_file)
 
 def populate_stats():
@@ -90,7 +90,7 @@ def populate_stats():
         price_list.sort()
         prev_low = price_list[0]
 
-        
+
         # updates order types
         if event["order_type"] == ("buy" or "Buy"):
             current_stats["num_buy_orders"] += 1
@@ -101,7 +101,7 @@ def populate_stats():
         # update highest price
         if event['price'] > current_stats["highest_order_price"]:
             current_stats["highest_order_price"] = event["price"]
-        
+
         # # update lowest order price
         elif event['price'] <= prev_low:
             current_stats['lowest_order_price'] = event['price']
@@ -109,7 +109,7 @@ def populate_stats():
         current_stats['num_orders_filled'] += 1
         current_stats["number_orders"] += 1
 
-    
+
     ''' Stock Endpoint '''
     # if stock_response_events.status_code == 200:
     events = stock_response_events.json()
@@ -129,14 +129,14 @@ def populate_stats():
         # update highest price
         if event['purchase_price'] > current_stats["highest_order_price"]:
             current_stats["highest_order_price"] = event["purchase_price"]
-        
+
         # update lowest price
         elif event['purchase_price'] <= prev_low:
             current_stats['lowest_order_price'] = event['purchase_price']
-            
+
     # else:
     #     logger.error("Failed to fetch events from Data Store Service")
-    
+
     current_stats['last_updated'] = current_datetime
 
     # save updated stats
@@ -148,10 +148,10 @@ def populate_stats():
 
 
 def init_scheduler():
-    sched = BackgroundScheduler(daemon=True) 
-    sched.add_job(populate_stats,    
-                  'interval', 
-                  seconds=app_config['scheduler']['period_sec']) 
+    sched = BackgroundScheduler(daemon=True)
+    sched.add_job(populate_stats,
+                  'interval',
+                  seconds=app_config['scheduler']['period_sec'])
     sched.start()
 
 
@@ -174,12 +174,12 @@ def get_stats():
     logger.info("GET /api/stats request completed")
 
     return curr_stats, 200
-    
+
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 
-if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test": 
-    CORS(app.app) 
+if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
+    CORS(app.app)
     app.app.config['CORS_HEADERS'] = 'Content-Type'
 
 app.add_api("openapi.yml", base_path="/processing", strict_validation=True, validate_responses=True)
