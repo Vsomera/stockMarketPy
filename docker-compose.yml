@@ -103,5 +103,5 @@ volumes:
   processing-db:
 
 networks:
-  # project_network:
+  project_network:
   api.network:
