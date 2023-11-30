@@ -96,12 +96,12 @@ services:
     ports: 
       - "80:80" 
     networks: 
-      - "api.network"
+      - api.network
 
 volumes:
   db-data:
   processing-db:
 
 networks:
-  project_network:
+  # project_network:
   api.network:
