@@ -21,7 +21,7 @@ services:
       - '8090'
     networks:
       # - project_network
-      - api.network
+      - "api.network"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -35,7 +35,7 @@ services:
       - "8080"
     networks:
       # - project_network
-      - api.network
+      - "api.network"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -49,7 +49,7 @@ services:
       - '8100'
     networks:
       # - project_network
-      - api.network
+      - "api.network"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -64,7 +64,7 @@ services:
       - '8110'
     networks:
       # - project_network
-      - api.network
+      - "api.network"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -78,7 +78,7 @@ services:
       - '4173'
     networks:
       # - project_network
-      - api.network
+      - "api.network"
       
   nginx: 
     image: nginx:latest 
@@ -96,7 +96,7 @@ services:
     ports: 
       - "80:80" 
     networks: 
-      - api.network
+      - "api.network"
 
 volumes:
   db-data:
