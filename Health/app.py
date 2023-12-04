@@ -21,8 +21,7 @@ def poll_services():
     while True:
         # Logic to poll each service and update service_statuses
         # Use requests.get with a timeout of 5 seconds
-        
-
+        pass
         time.sleep(20)
 
 @app.route('/health', methods=['GET'])
