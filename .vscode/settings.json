@@ -3,6 +3,7 @@
         "apscheduler",
         "connexion",
         "eventstore",
+        "reciever",
         "sessionmaker",
         "sqlalchemy"
     ]

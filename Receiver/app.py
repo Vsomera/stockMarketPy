@@ -127,7 +127,7 @@ def addToList(body):
 app = connexion.FlaskApp(__name__, specification_dir='')
 CORS(app.app) 
 app.app.config['CORS_HEADERS'] = 'Content-Type' 
-app.add_api("openapi.yml", base_path="/receiver", strict_validation=True, validate_responses=True)
+app.add_api("openapi.yml", base_path="/reciever", strict_validation=True, validate_responses=True)
 if __name__ == "__main__":
     init_kafka_client()  # Initialize Kafka client on startup
     print("Running on http://localhost:8080/ui/")
