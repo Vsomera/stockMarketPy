@@ -51,6 +51,10 @@ logger = logging.getLogger('basicLogger')
 logger.info("App Conf File: %s" % app_conf_file) 
 logger.info("Log Conf File: %s" % log_conf_file)
 
+
+def health_check():
+    return "Service is healthy", 200
+
 def init_kafka_client():
     global kafka_client, kafka_topic, producer
 

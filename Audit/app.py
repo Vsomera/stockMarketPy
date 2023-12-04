@@ -51,6 +51,9 @@ logger = logging.getLogger('basicLogger')
 logger.info("App Conf File: %s" % app_conf_file) 
 logger.info("Log Conf File: %s" % log_conf_file)
 
+def health_check():
+    return "Service is healthy", 200
+
 def get_event_by_index(event_type, index):
     """
     Generic function to retrieve an event based on its type and relative index.

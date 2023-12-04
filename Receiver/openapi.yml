@@ -1,4 +1,3 @@
----
 openapi: 3.0.0
 info:
   title: Stock Market API
@@ -49,6 +48,17 @@ paths:
           description: APPL added to Watch list
         "400":
           description: "invalid input, object invalid"
+
+  /health:
+    get:
+      tags:
+      - health
+      description: Health check endpoint
+      operationId: app.health_check
+      responses:
+        '200':
+          description: Service is healthy
+
 components:
   schemas:
     Orders:

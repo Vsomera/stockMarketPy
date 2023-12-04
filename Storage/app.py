@@ -69,6 +69,9 @@ Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 
+def health_check():
+    return "Service is healthy", 200
+
 def getOrders(start_timestamp, end_timestamp):
     # GET /api/orders
     session = DB_SESSION()

@@ -7,27 +7,27 @@ info:
   version: 1.0.0
 
 tags:
-  - name: stocks
-    description: Operations related stocks
-  - name: orders
-    description: Operations related orders
+- name: stocks
+  description: Operations related stocks
+- name: orders
+  description: Operations related orders
 
 paths:
   /api/stocks:
     get:
       tags:
-        - stocks
+      - stocks
       summary: gets a stock record from history
       operationId: app.get_stock_index
       parameters:
-        - name: index
-          in: query
-          description: Gets the stock at the index in the event store
-          required: true
+      - name: index
+        in: query
+        description: Gets the stock at the index in the event store
+        required: true
 
-          schema:
-            type: integer
-            example: 100
+        schema:
+          type: integer
+          example: 100
       responses:
         "200":
           description: Successfully returned a stock record event
@@ -58,17 +58,17 @@ paths:
   /api/orders:
     get:
       tags:
-        - orders
+      - orders
       summary: gets a order from history
       operationId: app.get_order_index
       parameters:
-        - name: index
-          in: query
-          description: Gets the order at the index in the event store
-          required: true
-          schema:
-            type: integer
-            example: 100
+      - name: index
+        in: query
+        description: Gets the order at the index in the event store
+        required: true
+        schema:
+          type: integer
+          example: 100
       responses:
         "200":
           description: Successfully returned a order record
@@ -95,7 +95,16 @@ paths:
                 properties:
                   message:
                     type: string
- 
+  /health:
+    get:
+      tags:
+      - health
+      description: Health check endpoint
+      operationId: app.health_check
+      responses:
+        '200':
+          description: Service is healthy
+
 components:
   schemas:
     Orders:
@@ -120,7 +129,7 @@ components:
           type: number
         trace_id:
           type: string
-          example: aabbccdd-1234-5678-90ab-cdef01234567 
+          example: aabbccdd-1234-5678-90ab-cdef01234567
     Stocks:
       required:
       - name
@@ -143,4 +152,4 @@ components:
           type: number
         trace_id:
           type: string
-          example: aabbccdd-1234-5678-90ab-cdef01234567 
+          example: aabbccdd-1234-5678-90ab-cdef01234567
