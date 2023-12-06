@@ -4,7 +4,7 @@ service:
     url: "http://ec2-3-143-231-139.us-east-2.compute.amazonaws.com:8110/health"
   processing:
     url: "http://ec2-3-143-231-139.us-east-2.compute.amazonaws.com:8100/health"
-  reciever:
+  receiver:
     url: "http://ec2-3-143-231-139.us-east-2.compute.amazonaws.com:8080/health"
   storage:
     url: "http://ec2-3-143-231-139.us-east-2.compute.amazonaws.com:8090/health"
