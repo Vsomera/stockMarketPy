@@ -1,5 +1,5 @@
 FROM python:3.9
 WORKDIR /app
 COPY . /app
-RUN pip install requests==2.31.0 
+RUN pip install requests==2.31.0 flask
 CMD ["python3", "app.py"]
