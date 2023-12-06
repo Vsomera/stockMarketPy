@@ -1,5 +1,6 @@
 FROM python:3.9
+RUN pip install --upgrade pip
+RUN pip install requests==2.31.0 flask yaml
 WORKDIR /app
 COPY . /app
-RUN pip install requests==2.31.0 flask yaml
 CMD ["python3", "app.py"]
