@@ -1,7 +1,6 @@
 import requests
 import threading
 import time
-import json
 from flask import Flask, jsonify
 import yaml
 
