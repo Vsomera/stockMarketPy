@@ -1,7 +1,8 @@
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import EndpointAudit from "../components/EndpointAudit"
-import AppStats from "../components/AppStats"
+import EndpointAudit from "./components/EndpointAudit"
+import AppStats from "./components/AppStats"
+import Health from './components/Health'
 import './App.css'
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         </a>
       </div>
       <h1>Latest Stats</h1>
+      <Health />
       <AppStats />
       <EndpointAudit endpoint='orders'/>
       <EndpointAudit endpoint='stocks'/>

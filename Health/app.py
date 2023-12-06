@@ -2,11 +2,13 @@ import requests
 import threading
 import time
 from flask import Flask, jsonify
+from flask_cors import CORS
 import yaml
 
 # Configuration and logging setup
 
 app = Flask(__name__)
+CORS(app) 
 
 # Data structure to store service statuses
 service_statuses = {
